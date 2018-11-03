@@ -53,7 +53,7 @@ spring:
         pool-prepared-statements: false
         max-pool-prepared-statement-per-connection-size: 20
         # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-        filters: stat,wall,slf4j
+        filters: stat,wall,log4j2
         # 合并多个DruidDataSource的监控数据
         #spring.datasource.useGlobalDataSourceStat=true
         filter:
@@ -61,7 +61,7 @@ spring:
             merge-sql: true
             slow-sql-millis: 200
             log-slow-sql: true
-          slf4j:
+          log4j2:
             connection-log-enabled: true
             enabled: true
         #创建servlet注册实体
@@ -79,11 +79,9 @@ spring:
         aop-patterns: com.freewill.console.*.controller.*
         name: ministore
         driver-class-name: com.mysql.jdbc.Driver
-#        url: jdbc:mysql://cdb-ecl5bfah.gz.tencentcdb.com:10039/feeling?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior= convertToNull
-        url: jdbc:mysql://112.74.183.127:3306/ejauto_invite?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
+        url: jdbc:mysql://XXXX:3306/XXXX?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
         username: root
-#        password: Gj1397539
-        password: ejauto123
+        password: XXXX
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml

@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <name>Freewill Parent</name>
-    <description>personal project for Spring Boot</description>
+    <description>整个项目的主框架包</description>
     <packaging>pom</packaging>
 
     <parent>
@@ -25,11 +25,7 @@
     </properties>
 
     <dependencies>
-        <!--springboot启动包-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
+
         <!--&lt;!&ndash;微信开放平台组件&ndash;&gt;-->
         <!--<dependency>-->
         <!--<groupId>com.github.binarywang</groupId>-->
