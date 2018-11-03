@@ -1,0 +1,36 @@
+# Compiled class file
+**/target
+**/webapp/userfiles
+**/WEB-INF/classes
+
+
+.classpath
+.project
+# Log file
+*.log
+**/logs/*.log*
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+*.idea
+*.ipr
+*.iml
+*.iws
+*.lic
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/.idea/
+/freewill_dev_1.0.iml
+/mvnw.cmd
+/mvnw
