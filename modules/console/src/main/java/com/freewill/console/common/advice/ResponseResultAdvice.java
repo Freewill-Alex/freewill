@@ -2,6 +2,7 @@ package com.freewill.console.common.advice;
 
 import com.freewill.common.utils.RequestContextHolderUtil;
 import com.freewill.common.web.annotation.ResponseResult;
+import com.freewill.common.web.wrapper.CommonConstant;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
 import com.freewill.common.web.wrapper.Result;
 import com.freewill.console.common.interceptor.ResponseResultInterceptor;
@@ -13,8 +14,6 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhumaer
@@ -35,7 +34,6 @@ public class ResponseResultAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         // 此处的body即为返回前的返回结果，可对此进行处理，如加密，替换等等，如数据列权限的控制，可在此处用反射进行替换等
-        HttpServletRequest req = RequestContextHolderUtil.getRequest();
         if (body instanceof GlobalResponseResult) {
             return body;
         }
@@ -49,7 +47,7 @@ public class ResponseResultAdvice implements ResponseBodyAdvice<Object> {
 
         Class<? extends Result> resultClazz = responseResultAnn.value();
         if (resultClazz.isAssignableFrom(GlobalResponseResult.class)) {
-            GlobalResponseResult result = new GlobalResponseResult().isSuccess(true).setPath(RequestContextHolderUtil.getRequest().getRequestURI()).setData(body);
+            GlobalResponseResult result = new GlobalResponseResult().setCode(CommonConstant.SUCCESS_CODE).setPath(RequestContextHolderUtil.getRequest().getRequestURI()).setData(body);
             if (body instanceof String) {
                 return result.toString();
             }

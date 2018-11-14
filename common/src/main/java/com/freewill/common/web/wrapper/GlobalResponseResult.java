@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 public class GlobalResponseResult implements Result {
-    private boolean isSuccess;
+    private Integer code;
     private String path;
     private String errorMsg="";
     private Object data;
@@ -22,8 +22,12 @@ public class GlobalResponseResult implements Result {
         return this;
     }
 
-    public GlobalResponseResult isSuccess(boolean isSuccess) {
-        this.isSuccess = isSuccess;
+    public Integer getCode() {
+        return code;
+    }
+
+    public GlobalResponseResult setCode(Integer code) {
+        this.code = code;
         return this;
     }
 

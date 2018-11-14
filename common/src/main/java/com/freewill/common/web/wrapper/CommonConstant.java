@@ -7,13 +7,26 @@ package com.freewill.common.web.wrapper;
  * @Created 2018-09-25 16:31
  */
 public class CommonConstant {
-
     /**
-     * Request result message
+     * 成功
      */
-    public static final String DEFAULT_SUCCESS_MESSAGE = "success";
-    public static final String DEFAULT_FAIL_MESSAGE = "fail";
-    public static final String NO_RESULT_MESSAGE = "no result";
+    public static final int SUCCESS_CODE = 100;
+    /**
+     * 失败
+     */
+    public static final int FAILED_CODE = 101;
+    /**
+     * 未登录
+     */
+    public static final int NOLOGIN_CODE = 102;
+    /**
+     * 表单参数错误
+     */
+    public static final int FORM_VALID_ERROR_CODE = 103;
+    /**
+     * 无权限
+     */
+    public static final int NOAUTH_CODE = 104;
 
     /**
      * Operation status
@@ -24,12 +37,7 @@ public class CommonConstant {
     /**
      * Error or exception message
      */
-
     public static final String BUSINESS_ERR = "Business Exception";
     public static final String DB_ERROR_MESSAGE = "Database Error";
     public static final String SERVER_ERROR_MESSAGE = "Server Error";
-    /**
-     * Package path
-     */
-    public static final String FREEWILL_PATH = "com.freewill";
 }

@@ -1,5 +1,6 @@
 package com.freewill.console.common.advice;
 
+import com.freewill.common.web.wrapper.CommonConstant;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
 import com.freewill.console.common.exception.BussinessException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
-import java.util.Set;
 
 import static com.freewill.common.web.wrapper.CommonConstant.BUSINESS_ERR;
 
@@ -45,14 +44,13 @@ public class GlobalExceptionAdvice {
      *
      * @param req
      * @param e
-     * @return
+     * @return GlobalResponseResult
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {BussinessException.class,})
-    public GlobalResponseResult businessException(HttpServletRequest req, BussinessException e) {
+    @ExceptionHandler(value = {BussinessException.class, RuntimeException.class})
+    public GlobalResponseResult businessException(HttpServletRequest req, Exception e) {
         log.debug("API服务异常：", e);
-        return new GlobalResponseResult().setErrorMsg(BUSINESS_ERR).setPath(req.getRequestURI()).setData("Exception ：" + e.getMessage());
-
+        return exceptionWarpper(CommonConstant.FAILED_CODE, "Exception ：" + e.getMessage(), req);
     }
 
     /**
@@ -60,10 +58,10 @@ public class GlobalExceptionAdvice {
      *
      * @param e
      * @param request
-     * @return
+     * @return ModelAndView
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({ServletException.class, IOException.class, RuntimeException.class})
+    @ExceptionHandler({ServletException.class, IOException.class})
     public ModelAndView serverException(Exception e, WebRequest request) {
         log.error("系统服务异常：", e);
         log.debug(request.getHeader("Content-Type"));
@@ -79,7 +77,7 @@ public class GlobalExceptionAdvice {
      *
      * @param e
      * @param request
-     * @return
+     * @return ModelAndView
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = {NoHandlerFoundException.class})
@@ -93,9 +91,9 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+    public GlobalResponseResult handleMissingServletRequestParameterException(HttpServletRequest req, MissingServletRequestParameterException e) {
         log.error("缺少请求参数", e);
-        return "缺少请求参数";
+        return exceptionWarpper(CommonConstant.FAILED_CODE, "缺少请求参数", req);
     }
 
     /**
@@ -103,9 +101,9 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public String handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public GlobalResponseResult handleHttpMessageNotReadableException(HttpServletRequest req, HttpMessageNotReadableException e) {
         log.error("参数解析失败", e);
-        return "参数解析失败";
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数解析失败", req);
     }
 
     /**
@@ -116,11 +114,11 @@ public class GlobalExceptionAdvice {
     public GlobalResponseResult handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
         FieldError error = result.getFieldError();
-        String field = error.getField();
-        String code = error.getDefaultMessage();
+        String field = error != null ? error.getField() : null;
+        String code = error != null ? error.getDefaultMessage() : null;
         String message = String.format("%s:%s", field, code);
         log.error("参数验证失败{}", message);
-        return new GlobalResponseResult().setErrorMsg(BUSINESS_ERR).setPath(req.getRequestURI()).setData("参数验证失败" + message);
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数验证失败" + message, req);
     }
 
     /**
@@ -131,11 +129,11 @@ public class GlobalExceptionAdvice {
     public GlobalResponseResult handleBindException(HttpServletRequest req, BindException e) {
         BindingResult result = e.getBindingResult();
         FieldError error = result.getFieldError();
-        String field = error.getField();
-        String code = error.getDefaultMessage();
+        String field = error != null ? error.getField() : null;
+        String code = error != null ? error.getDefaultMessage() : null;
         String message = String.format("[%s]:%s", field, code);
         log.error("参数绑定失败{}", message);
-        return new GlobalResponseResult().setErrorMsg(BUSINESS_ERR).setPath(req.getRequestURI()).setData("参数绑定失败" + message);
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数绑定失败" + message, req);
     }
 
 
@@ -144,12 +142,10 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public String handleServiceException(ConstraintViolationException e) {
+    public GlobalResponseResult handleServiceException(HttpServletRequest req, ConstraintViolationException e) {
         log.error("参数验证失败", e);
-        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        ConstraintViolation<?> violation = violations.iterator().next();
-        String message = violation.getMessage();
-        return "参数验证失败" + message;
+
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数验证失败", req);
     }
 
     /**
@@ -157,9 +153,9 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
-    public String handleValidationException(ValidationException e) {
+    public GlobalResponseResult handleValidationException(HttpServletRequest req, ValidationException e) {
         log.error("参数验证失败", e);
-        return "参数验证失败";
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数验证失败", req);
     }
 
 
@@ -168,9 +164,9 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public String handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    public GlobalResponseResult handleHttpRequestMethodNotSupportedException(HttpServletRequest req, HttpRequestMethodNotSupportedException e) {
         log.error("不支持当前请求方法", e);
-        return "request_method_not_supported";
+        return exceptionWarpper(CommonConstant.FAILED_CODE, "不支持当前请求方法", req);
     }
 
     /**
@@ -178,9 +174,14 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public String handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+    public GlobalResponseResult handleHttpMediaTypeNotSupportedException(HttpServletRequest req, HttpMediaTypeNotSupportedException e) {
         log.error("不支持当前媒体类型", e);
-        return "content_type_not_supported";
+
+        return exceptionWarpper(CommonConstant.FAILED_CODE, "不支持当前媒体类型", req);
+    }
+
+    private GlobalResponseResult exceptionWarpper(int code, String message, HttpServletRequest req) {
+        return new GlobalResponseResult().setCode(code).setErrorMsg(message).setPath(req.getRequestURI()).setData(BUSINESS_ERR);
     }
 }
 
