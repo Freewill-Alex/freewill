@@ -1,6 +1,4 @@
-/**
- *
- */
+
 package com.freewill.console.common.dto;
 
 import java.io.Serializable;
@@ -12,28 +10,16 @@ import java.io.Serializable;
  */
 public class CheckCode implements Serializable {
 
-    public final static String TYPE_REGISTER = "REGISTER";
-    public final static String TYPE_RESETPWD = "RESETPWD";
-    public final static String TYPE_CHANGEPHONE = "CHANGEPHONE";
-    public final static String TYPE_SUPPLY = "supply";
+
     /**
      *
      */
     private static final long serialVersionUID = 423425018923619891L;
-    /**
-     * 校验码有效期时间
-     */
-    private static int VERIFY_INTERVAL = 60000 * 10;
 
     /**
      * 电话号码
      */
     private String phone;
-
-    /**
-     * 验证类型
-     */
-    private String type;
 
     /**
      * 生成校验码
@@ -64,9 +50,8 @@ public class CheckCode implements Serializable {
      * @param code     校验码
      * @param sendTime 发送时间
      */
-    public CheckCode(String phone, String type, String code, long sendTime) {
+    public CheckCode(String phone, String code, long sendTime) {
         this.phone = phone;
-        this.type = type;
         this.code = code;
         this.sendTime = sendTime;
     }
@@ -77,7 +62,11 @@ public class CheckCode implements Serializable {
      * @return true 未过期
      */
     public boolean isValid() {
-        return ((System.currentTimeMillis() - sendTime) < VERIFY_INTERVAL) && tryTimes <= 3;
+        /*
+      校验码有效期时间
+     */
+        int verifyInterval = 6000 * 10;
+        return (System.currentTimeMillis() - sendTime) < verifyInterval && tryTimes <= 3;
     }
 
     /**
@@ -120,13 +109,6 @@ public class CheckCode implements Serializable {
      */
     public void setPassed(boolean isPassed) {
         this.isPassed = isPassed;
-    }
-
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
     }
 
     /**

@@ -1,7 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
 
 package com.freewill.common.utils;
 
@@ -14,12 +10,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * @author sanma
+ */
 public class MapUtils {
     public MapUtils() {
     }
 
     public static String transMap2Str(Map<?, ?> map) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator iterator = map.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -33,18 +32,16 @@ public class MapUtils {
         if (obj == null) {
             return null;
         } else {
-            HashMap map = new HashMap();
+            HashMap map = new HashMap(16);
 
             try {
                 BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
                 PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-                PropertyDescriptor[] var4 = propertyDescriptors;
                 int var5 = propertyDescriptors.length;
 
-                for (int var6 = 0; var6 < var5; ++var6) {
-                    PropertyDescriptor property = var4[var6];
+                for (PropertyDescriptor property : propertyDescriptors) {
                     String key = property.getName();
-                    if (!key.equals("class")) {
+                    if (!"class".equals(key)) {
                         Method getter = property.getReadMethod();
                         Object value = getter.invoke(obj);
                         if (value != null) {
@@ -60,22 +57,20 @@ public class MapUtils {
         }
     }
 
-    public static Map<String, Object> trans2Map(Object obj) {
+    public static HashMap trans2Map(Object obj) {
         if (obj == null) {
             return null;
         } else {
-            HashMap map = new HashMap();
+            HashMap map = new HashMap(16);
 
             try {
                 BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
                 PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-                PropertyDescriptor[] var4 = propertyDescriptors;
                 int var5 = propertyDescriptors.length;
 
-                for (int var6 = 0; var6 < var5; ++var6) {
-                    PropertyDescriptor property = var4[var6];
+                for (PropertyDescriptor property : propertyDescriptors) {
                     String key = property.getName();
-                    if (!key.equals("class")) {
+                    if (!"class".equals(key)) {
                         Method getter = property.getReadMethod();
                         Object value = getter.invoke(obj);
                         if (value != null) {
@@ -93,14 +88,4 @@ public class MapUtils {
         }
     }
 
-    public static void transMap2Bean(Map<String, Object> map, Object obj) {
-        if (map != null && obj != null) {
-            try {
-//                BeanUtils.populate(obj, map);
-            } catch (Exception var3) {
-                System.out.println("transMap2Bean2 Error " + var3);
-            }
-
-        }
-    }
 }

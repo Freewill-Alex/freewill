@@ -1,7 +1,6 @@
 package com.freewill.common.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 公共组件配置类
@@ -9,9 +8,9 @@ import org.slf4j.LoggerFactory;
  * @author dengfuyuan
  *
  */
+@Slf4j
 public final class CommonConfig {
 
-	private static final Logger logger = LoggerFactory.getLogger(CommonConfig.class);
 
 	private static boolean debugMode;
 

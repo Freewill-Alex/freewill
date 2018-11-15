@@ -1,6 +1,7 @@
 package com.freewill.console.common.utils;
 
 import com.freewill.common.qrcode.QRCodeUtil;
+import com.freewill.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,26 @@ public class PosterUtil {
         }
     }
 
-
+    public static BufferedImage buildQrImage(String qrContent) {
+        BufferedImage tag = null;
+        try {
+            Image src = QRCodeUtil.createQrCode(qrContent, 350, 350, "jpg");
+            int wideth = src.getWidth(null);
+            int height = src.getHeight(null);
+            logger.info("二维码宽度：" + wideth + ",高度：" + height);
+            tag = new BufferedImage(wideth, height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = tag.createGraphics();
+            g.setBackground(new Color(26, 26, 26));
+            g.clearRect(0, 0, wideth, height);
+            g.drawImage(src, 0, 0, wideth, height, null);
+            g.dispose();
+            tag.flush();
+            logger.info(" 成功  ");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tag;
+    }
     public static BufferedImage buildDriverPoster(String templetUrl, String qrContent) {
 
         BufferedImage tag = null;
@@ -85,7 +105,18 @@ public class PosterUtil {
 
 
     public static InputStream buildToInputStream(String templetUrl, String qrContent) {
-        BufferedImage image = buildDriverPoster(templetUrl, qrContent);
+        BufferedImage image;
+        if (StringUtils.isEmpty(templetUrl)) {
+            image = buildQrImage(qrContent);
+        } else {
+            image = buildDriverPoster(templetUrl, qrContent);
+        }
+        return buildToInputStream(image);
+    }
+
+
+    private static InputStream buildToInputStream(BufferedImage image) {
+
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {

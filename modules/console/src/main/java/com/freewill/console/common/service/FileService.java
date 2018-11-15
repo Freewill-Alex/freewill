@@ -1,6 +1,11 @@
 package com.freewill.console.common.service;
 
+import com.freewill.common.pdf.PdfUtil;
+import com.freewill.console.common.utils.OSSUtils;
 import org.springframework.stereotype.Service;
+
+import java.io.InputStream;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -11,20 +16,20 @@ public class FileService {
      * @param fileName
      * @return
      */
-//    public String pdfToSnapshot(String fileName) {
-//        InputStream pdfFile = OSSUtils.getPrivateFileAsStream(fileName);
-//
-//        List<InputStream> list = PdfUtil.pdfToImg(pdfFile);
-//
-//        StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < list.size(); i++) {
-//            InputStream imgFile = list.get(i);
-//            String imgUrl = OSSUtils.savePrivateFile(imgFile, "bms/loan/snapshot", ".png");
-//            sb.append(imgUrl);
-//            if ((i + 1) < list.size()) {
-//                sb.append(",");
-//            }
-//        }
-//        return sb.toString();
-//    }
+    public String pdfToSnapshot(String fileName) {
+        InputStream pdfFile = OSSUtils.getPrivateFileAsStream(fileName);
+
+        List<InputStream> list = PdfUtil.pdfToImg(pdfFile);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            InputStream imgFile = list.get(i);
+            String imgUrl = OSSUtils.savePrivateFile(imgFile, "bms/loan/snapshot", ".png");
+            sb.append(imgUrl);
+            if ((i + 1) < list.size()) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
 }

@@ -1,6 +1,5 @@
 package com.freewill.common.pdf;
 
-import com.hg.xdoc.XDocService;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfReader;
@@ -9,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-
+import com.hg.xdoc.XDocService;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
