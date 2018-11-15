@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.freewill.cms.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.freewill.cms.domain.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="openId" property="openid" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="store_id" property="storeId" jdbcType="INTEGER"/>
+        <result column="merchants_id" property="merchantsId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="job" property="job" jdbcType="VARCHAR"/>
+        <result column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="head_image" property="headImage" jdbcType="VARCHAR"/>
+        <result column="introduce" property="introduce" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_name, password, name, sex, phone, id_card, openId, status, remark,
+        store_id, merchants_id, create_time, update_time, job, uuid, head_image, introduce
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM user
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.freewill.cms.domain.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (id, user_name, password,
+                          name, sex, phone, id_card,
+                          openId, status,
+                          remark, store_id, merchants_id,
+                          create_time, update_time, job, uuid,
+                          head_image, introduce)
+        VALUES (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                                        #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+                                        #{idCard,jdbcType=VARCHAR},
+                                        #{openid,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+                                        #{remark,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER},
+                #{merchantsId,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{job,jdbcType=VARCHAR},
+                #{uuid,jdbcType=VARCHAR},
+                #{headImage,jdbcType=VARCHAR}, #{introduce,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.freewill.cms.domain.User" useGeneratedKeys="true" keyProperty="id">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="idCard != null">
+                id_card,
+            </if>
+            <if test="openid != null">
+                openId,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="merchantsId != null">
+                merchants_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="job != null">
+                job,
+            </if>
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="headImage != null">
+                head_image,
+            </if>
+            <if test="introduce != null">
+                introduce,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null">
+                #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null">
+                #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="storeId != null">
+                #{storeId,jdbcType=INTEGER},
+            </if>
+            <if test="merchantsId != null">
+                #{merchantsId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="job != null">
+                #{job,jdbcType=VARCHAR},
+            </if>
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="headImage != null">
+                #{headImage,jdbcType=VARCHAR},
+            </if>
+            <if test="introduce != null">
+                #{introduce,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.freewill.cms.domain.User">
+        update user
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null">
+                openId = #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="storeId != null">
+                store_id = #{storeId,jdbcType=INTEGER},
+            </if>
+            <if test="merchantsId != null">
+                merchants_id = #{merchantsId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="job != null">
+                job = #{job,jdbcType=VARCHAR},
+            </if>
+            <if test="uuid != null">
+                uuid = #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="headImage != null">
+                head_image = #{headImage,jdbcType=VARCHAR},
+            </if>
+            <if test="introduce != null">
+                introduce = #{introduce,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.freewill.cms.domain.User">
+        UPDATE user
+        SET user_name    = #{userName,jdbcType=VARCHAR},
+            password     = #{password,jdbcType=VARCHAR},
+            name         = #{name,jdbcType=VARCHAR},
+            sex          = #{sex,jdbcType=INTEGER},
+            phone        = #{phone,jdbcType=VARCHAR},
+            id_card      = #{idCard,jdbcType=VARCHAR},
+            openId       = #{openid,jdbcType=VARCHAR},
+            status       = #{status,jdbcType=INTEGER},
+            remark       = #{remark,jdbcType=VARCHAR},
+            store_id     = #{storeId,jdbcType=INTEGER},
+            merchants_id = #{merchantsId,jdbcType=INTEGER},
+            create_time  = #{createTime,jdbcType=TIMESTAMP},
+            update_time  = #{updateTime,jdbcType=TIMESTAMP},
+            job          = #{job,jdbcType=VARCHAR},
+            uuid         = #{uuid,jdbcType=VARCHAR},
+            head_image   = #{headImage,jdbcType=VARCHAR},
+            introduce    = #{introduce,jdbcType=VARCHAR}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <sql id="selectUser">
+        SELECT
+            u.id,
+            u.user_name   AS userName,
+            u.password,
+            u.name,
+            u.sex,
+            u.phone,
+            u.id_card     AS idCard,
+            u.openId,
+            u.store_id       storeId,
+            u.merchants_id   merchantsId,
+            u.status,
+            u.remark,
+            u.create_time AS createTime,
+            u.update_time AS updateTime,
+            u.job,
+            u.uuid,
+            u.head_image     headImage,
+            u.introduce
+        FROM
+            user u
+
+    </sql>
+
+    <select id="getByUserName" resultType="com.freewill.cms.user.dto.UserInfo" parameterType="java.util.Map">
+        <include refid="selectUser"/>
+        <where>
+            <if test="userName != null">
+                and u.user_name = #{userName}
+            </if>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+            <!-- <if test="storeId != null">
+                and u.store_id = #{storeId}
+            </if> -->
+        </where>
+        group by u.id
+    </select>
+
+    <select id="getUserInfoById" resultType="com.freewill.cms.user.dto.UserInfo">
+        <include refid="selectUser"/>
+        where
+        u.id = #{id}
+        <if test="status != null">
+            and u.status = #{status}
+        </if>
+        group by u.id
+    </select>
+
+
+    <select id="getByOpenId" resultType="com.freewill.cms.user.dto.UserInfo" parameterType="java.util.Map">
+        <include refid="selectUser"/>
+        <where>
+            <if test="openId != null">
+                and u.openId = #{openId}
+            </if>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+            <if test="storeId != null">
+                and u.store_id = #{storeId}
+            </if>
+        </where>
+        group by u.id
+    </select>
+
+    <select id="listBy" resultType="com.freewill.cms.user.dto.UserListInfo" parameterType="java.util.Map">
+        select
+        u.id,
+        u.user_name as userName,
+        u.password,
+        u.name,
+        u.sex,
+        u.phone,
+        u.id_card as idCard,
+        u.openId,
+        u.store_id storeId,
+        u.merchants_id merchantsId,
+        u.status,
+        u.remark,
+        u.create_time as createTime,
+        u.update_time as updateTime,
+        u.job,
+        u.uuid,
+        u.head_image headImage,
+        u.introduce
+        from
+        user u
+        <where>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+            <if test="storeId != null">
+                and u.store_id = #{storeId}
+            </if>
+        </where>
+        group by u.id
+    </select>
+
+    <select id="listByRole" resultType="com.freewill.cms.user.dto.UserInfo" parameterType="java.util.Map">
+        select
+        u.id,
+        u.user_name as userName,
+        u.password,
+        u.name,
+        u.sex,
+        u.phone,
+        u.id_card as idCard,
+        u.openId,
+        u.store_id storeId,
+        u.merchants_id merchantsId,
+        u.status,
+        u.remark,
+        u.create_time as createTime,
+        u.update_time as updateTime,
+        u.job,
+        u.uuid
+        from
+        `user` u
+
+        <where>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+            <if test="storeId != null">
+                and u.store_id = #{storeId}
+            </if>
+        </where>
+
+    </select>
+
+
+</mapper>
