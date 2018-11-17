@@ -1,8 +1,8 @@
 package com.freewill.cms.driver.form;
 
 
-import com.freewill.cms.common.validation.AddGroup;
-import com.freewill.cms.common.validation.EditGroup;
+import com.freewill.cms.common.validgroup.AddGroup;
+import com.freewill.cms.common.validgroup.EditGroup;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;

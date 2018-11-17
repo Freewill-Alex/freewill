@@ -1,12 +1,12 @@
 package com.freewill.cms.driver.service;
 
-import com.freewill.cms.common.exception.BussinessException;
 import com.freewill.cms.common.page.BasePage;
 import com.freewill.cms.domain.DriverApplication;
 import com.freewill.cms.driver.em.DriverEnum;
 import com.freewill.cms.driver.form.DriverForm;
 import com.freewill.cms.driver.form.DriverListForm;
 import com.freewill.cms.mapper.DriverApplicationMapper;
+import com.freewill.common.exception.BussinessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

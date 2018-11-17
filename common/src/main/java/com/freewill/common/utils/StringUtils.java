@@ -8,11 +8,10 @@ import java.util.UUID;
 public class StringUtils {
 	
 	public static boolean isEmpty(Object obj){
-		if(null==obj)
+        if (null == obj) {
 			return true;
-		if("".equals(obj.toString()))
-			return true;
-		return false;
+        }
+        return "".equals(obj.toString());
 	}
 	
 	@SuppressWarnings("unchecked")

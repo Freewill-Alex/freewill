@@ -1,8 +1,8 @@
 //package com.freewill.console.user.controller;
 //
-//import com.freewill.cms.common.validation.AddGroup;
-//import com.freewill.cms.common.validation.EditGroup;
-//import com.freewill.cms.common.validation.SelectGroup;
+//import com.freewill.cms.common.validgroup.AddGroup;
+//import com.freewill.cms.common.validgroup.EditGroup;
+//import com.freewill.cms.common.validgroup.SelectGroup;
 //import com.freewill.cms.user.dto.UserInfo;
 //import com.freewill.cms.user.dto.UserListInfo;
 //import com.freewill.cms.user.form.SalfEditForm;
@@ -14,7 +14,7 @@
 //import org.apache.struts.util.ResponseUtils;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
-//import org.springframework.validation.annotation.Validated;
+//import org.springframework.validgroup.annotation.Validated;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //
 //import javax.servlet.http.HttpServletRequest;

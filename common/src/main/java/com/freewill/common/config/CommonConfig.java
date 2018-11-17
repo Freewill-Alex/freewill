@@ -33,8 +33,6 @@ public final class CommonConfig {
 	private static String aliyunRamAccesskey;
 	private static String aliyunRamAccesssecret;
 
-	/** 阿里云 AccessEndPoint **/
-	private static String aliyunAccountEndpoint;
 
 	/** 阿里云 短信签名 **/
 	private static String aliyunSmsSign;
@@ -215,20 +213,6 @@ public final class CommonConfig {
 		CommonConfig.aliyunRamAccesssecret = aliyunRamAccesssecret;
 	}
 
-	/**
-	 * @return the aliyunAccountEndpoint
-	 */
-	public static String getAliyunAccountEndpoint() {
-		return aliyunAccountEndpoint;
-	}
-
-	/**
-	 * @param aliyunAccountEndpoint
-	 *            the aliyunAccountEndpoint to set
-	 */
-	public static void setAliyunAccountEndpoint(String aliyunAccountEndpoint) {
-		CommonConfig.aliyunAccountEndpoint = aliyunAccountEndpoint;
-	}
 
 	/**
 	 * @return the aliyunSmsSign

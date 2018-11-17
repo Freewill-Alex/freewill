@@ -1,4 +1,4 @@
-package com.freewill.common.web;
+package com.freewill.common.exception;
 
 public class IPLimitException extends RuntimeException {
 

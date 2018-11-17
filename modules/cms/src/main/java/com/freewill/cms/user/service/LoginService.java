@@ -1,7 +1,7 @@
 //package com.freewill.console.user.service;
 //
 //import com.freewill.common.utils.StringUtils;
-//import com.freewill.cms.common.exception.BussinessException;
+//import com.freewill.common.exception.BussinessException;
 //import com.freewill.cms.common.security.EJSecurityUtils;
 //import com.freewill.cms.domain.User;
 //import com.freewill.cms.mapper.UserMapper;

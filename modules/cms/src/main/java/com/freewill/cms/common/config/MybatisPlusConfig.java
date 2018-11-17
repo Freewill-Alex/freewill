@@ -1,4 +1,4 @@
-package com.freewill.cms.config;
+package com.freewill.cms.common.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;

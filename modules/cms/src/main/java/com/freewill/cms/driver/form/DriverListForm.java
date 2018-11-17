@@ -2,7 +2,7 @@ package com.freewill.cms.driver.form;
 
 
 import com.freewill.cms.common.page.BasePageForm;
-import com.freewill.cms.common.validation.SelectGroup;
+import com.freewill.cms.common.validgroup.SelectGroup;
 
 import javax.validation.constraints.NotNull;
 

@@ -37,7 +37,6 @@ public final class ApiConfig {
 
         CommonConfig.setAliyunRamAccesskey(getProperty("aliyun.ram.accesskey"));
         CommonConfig.setAliyunRamAccesssecret(getProperty("aliyun.ram.accesssecret"));
-        CommonConfig.setAliyunAccountEndpoint(getProperty("aliyun.account.endpoint"));
         CommonConfig.setAliyunSmsSign(getProperty("aliyun.sms.sign"));
     }
 
@@ -65,7 +64,7 @@ public final class ApiConfig {
      * @param key
      * @return
      */
-    public static String getProperty(String key) {
+    private static String getProperty(String key) {
 //        try {
 //            return props.getProperty(key).trim();
 //        } catch (Exception ex) {

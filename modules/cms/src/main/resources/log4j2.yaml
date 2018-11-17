@@ -11,13 +11,13 @@ Configuration:
         value: info
 #      自定义个人工程代码输出日志级别参数
       - name: log.level.applog
-        value: warn
+        value: info
 
       - name: log.path
-        value: /ejauto/logs
+        value: /freewill/logs
 
       - name: project.name
-        value: freewill_console
+        value: freewill_cms
 
   Appenders:
     Console:  #输出到控制台
@@ -28,7 +28,7 @@ Configuration:
         onMatch: ACCEPT
         onMismatch: DENY
       PatternLayout:
-        pattern: "[%4p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{32}.%M():%L — %msg%n"
+        pattern: "Freewill-[%4p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{32}.%M():%L — %msg%n"
 
     RollingFile: # 输出到文件，超过128MB归档
       - name: ROLLING_FILE
@@ -36,10 +36,10 @@ Configuration:
         fileName: ${log.path}/${project.name}/server.log
         filePattern: "${log.path}/${project.name}/${date:yyyy-MM}-server/%date-%i.log.gz"
         PatternLayout:
-          pattern:  "[%4p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{32}.%M():%L — %msg%n"
+          pattern:  "Freewill-[%4p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{32}.%M():%L — %msg%n"
         Policies:
           SizeBasedTriggeringPolicy:
-            size: "2 MB"
+            size: "100 MB"
         DefaultRolloverStrategy:
           max: 1000
 
@@ -66,7 +66,7 @@ Configuration:
         - ref: CONSOLE
         - ref: ROLLING_FILE
         - ref: ERROR_FILE
-    Logger: # 为com.freewill.console包配置特殊的Log级别，方便调试
+    Logger: # 为com.freewill.cms包配置特殊的Log级别，方便调试
       - name: com.freewill.cms
         additivity: false
         level: ${sys:log.level.applog}

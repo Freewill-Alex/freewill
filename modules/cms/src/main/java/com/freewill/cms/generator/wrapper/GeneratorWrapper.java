@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.freewill.cms.common.exception.BussinessException;
+import com.freewill.common.exception.BussinessException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,7 +82,7 @@ public class GeneratorWrapper {
         // 自定义实体父类
         strategy.setSuperEntityClass("");
         // 自定义实体,公共字段
-        strategy.setSuperEntityColumns(new String[]{"test_id", "age"});
+        strategy.setSuperEntityColumns("test_id", "age");
         // 自定义 mapper 父类
         strategy.setSuperMapperClass("");
         // 自定义 service 父类

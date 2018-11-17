@@ -1,4 +1,4 @@
-package com.freewill.cms.config;
+package com.freewill.cms.common.config;
 
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;

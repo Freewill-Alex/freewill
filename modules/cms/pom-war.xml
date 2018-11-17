@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <name>Freewill Module Cms</name>
-    <description>personal project for Spring Boot</description>
+    <description>war包对应的pom，打war包，执行【mvn clean package -f pom-war.xml】</description>
 
 
     <properties>
@@ -25,7 +25,6 @@
     </properties>
 
     <dependencies>
-
         <!-- springboot启动包- exclude掉spring-boot的默认log配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

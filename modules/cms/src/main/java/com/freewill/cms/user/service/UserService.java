@@ -1,7 +1,5 @@
 package com.freewill.cms.user.service;
 
-import com.aliyun.oss.internal.OSSUtils;
-import com.freewill.cms.common.exception.BussinessException;
 import com.freewill.cms.common.service.SmsService;
 import com.freewill.cms.domain.User;
 import com.freewill.cms.mapper.UserMapper;
@@ -9,6 +7,7 @@ import com.freewill.cms.user.dto.UserInfo;
 import com.freewill.cms.user.em.UserEnum;
 import com.freewill.cms.user.form.SalfEditForm;
 import com.freewill.cms.user.form.UserEditForm;
+import com.freewill.common.exception.BussinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

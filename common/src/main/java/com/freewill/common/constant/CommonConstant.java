@@ -1,4 +1,4 @@
-package com.freewill.common.web.wrapper;
+package com.freewill.common.constant;
 
 /**
  * @Description web相关常量封装

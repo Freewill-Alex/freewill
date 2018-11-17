@@ -1,4 +1,4 @@
-package com.freewill.cms.config;
+package com.freewill.cms.common.config;
 
 import com.freewill.cms.common.interceptor.ResponseResultInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

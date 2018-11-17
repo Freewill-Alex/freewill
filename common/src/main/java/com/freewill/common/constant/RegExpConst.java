@@ -1,4 +1,4 @@
-package com.freewill.cms.common.utils;
+package com.freewill.common.constant;
 
 /**
  * @Description 正则规则表达式集合
@@ -8,9 +8,9 @@ package com.freewill.cms.common.utils;
  */
 public class RegExpConst {
     /**
-     * 经纪人密码校验规则：字母+数字的组合,且长度不能小于6,不能大于16
+     * 密码校验规则：字母+数字的组合,且长度不能小于6,不能大于16
      */
-    public static final String BROKER_PWD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";
+    public static final String LOGIN_PWD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";
     /**
      * 手机号校验规则：前三位格式1[3.4.5.6.7.8.][0-9] 且长度为11位
      */

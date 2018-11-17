@@ -1,7 +1,7 @@
 package com.freewill.cms.user.form;
 
 
-import com.freewill.cms.common.validation.SelectGroup;
+import com.freewill.cms.common.validgroup.SelectGroup;
 
 import javax.validation.constraints.NotEmpty;
 

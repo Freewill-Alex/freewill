@@ -1,8 +1,8 @@
 package com.freewill.cms.common.advice;
 
-import com.freewill.common.web.wrapper.CommonConstant;
+import com.freewill.common.constant.CommonConstant;
+import com.freewill.common.exception.BussinessException;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
-import com.freewill.cms.common.exception.BussinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -27,7 +27,7 @@ import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
 
-import static com.freewill.common.web.wrapper.CommonConstant.BUSINESS_ERR;
+import static com.freewill.common.constant.CommonConstant.BUSINESS_ERR;
 
 /**
  * @author GaoJian
@@ -82,7 +82,7 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = {NoHandlerFoundException.class})
     public ModelAndView noMapping(NoHandlerFoundException e, WebRequest request) {
-        log.error("请求服务路径[{}]未找到可用服务...", request.getDescription(true));
+        log.warn("请求服务路径[{}]未找到可用服务...", request.getDescription(true));
         return new ModelAndView("/error/404.html");
     }
 

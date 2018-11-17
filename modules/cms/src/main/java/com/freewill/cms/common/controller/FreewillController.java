@@ -1,7 +1,7 @@
 package com.freewill.cms.common.controller;
 
+import com.freewill.common.exception.BussinessException;
 import com.freewill.common.web.annotation.ResponseResult;
-import com.freewill.cms.common.exception.BussinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

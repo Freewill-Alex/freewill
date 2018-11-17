@@ -1,8 +1,8 @@
 package com.freewill.cms.generator.controller;
 
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.freewill.cms.common.exception.BussinessException;
 import com.freewill.cms.generator.wrapper.GeneratorWrapper;
+import com.freewill.common.exception.BussinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

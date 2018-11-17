@@ -6,8 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static org.springframework.boot.Banner.Mode.OFF;
-
 /**
  * 将spring的启动和配置单独出来
  *
@@ -32,7 +30,7 @@ public class FreewillCmsBootstrap {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(FreewillCmsBootstrap.class);
-        application.setBannerMode(OFF);
+//        application.setBannerMode(OFF);
         application.setWebApplicationType(WebApplicationType.SERVLET);
         application.run(args);
         log.info("=====================SpringBoot Running Started===================");

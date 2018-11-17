@@ -1,11 +1,11 @@
 package com.freewill.cms.common.advice;
 
+import com.freewill.cms.common.interceptor.ResponseResultInterceptor;
+import com.freewill.common.constant.CommonConstant;
 import com.freewill.common.utils.RequestContextHolderUtil;
 import com.freewill.common.web.annotation.ResponseResult;
-import com.freewill.common.web.wrapper.CommonConstant;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
 import com.freewill.common.web.wrapper.Result;
-import com.freewill.cms.common.interceptor.ResponseResultInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

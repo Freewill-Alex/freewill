@@ -1,9 +1,9 @@
 package com.freewill.common.web.aop;
 
 
+import com.freewill.common.exception.IPLimitException;
 import com.freewill.common.redis.RedisUtils;
 import com.freewill.common.utils.RequestUtils;
-import com.freewill.common.web.IPLimitException;
 import com.freewill.common.web.annotation.IPLimit;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;

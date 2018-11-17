@@ -1,4 +1,4 @@
-package com.freewill.cms.common.exception;
+package com.freewill.common.exception;
 
 /**
  * @author GaoJian
