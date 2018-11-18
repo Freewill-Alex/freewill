@@ -22,19 +22,19 @@ public class GeneratorWrapper {
     private StrategyConfig strategy;
     private InjectionConfig cfg;
     private TemplateConfig tc;
-    private static final String projectPath = System.getProperty("user.dir");
+    private static final String PROJECT_PATH = System.getProperty("user.dir");
 
-    public GlobalConfig getDefClobalConf() {
+    private GlobalConfig getDefClobalConf() {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir(projectPath + "/代码生成器");
+        gc.setOutputDir(PROJECT_PATH + "/代码生成器");
         gc.setFileOverride(true);
         // 不需要ActiveRecord特性的请改为false
         gc.setActiveRecord(false);
         // XML 二级缓存
         gc.setEnableCache(false);
         // XML ResultMap
-        gc.setBaseResultMap(true);
+        gc.setBaseResultMap(false);
         // XML columList
         gc.setBaseColumnList(true);
         // 自定义文件命名，注意 %s 会自动填充表实体属性！
@@ -46,15 +46,15 @@ public class GeneratorWrapper {
         //设置开发者（默认获取主机名）
         gc.setAuthor(System.getProperty("user.name"));
         gc.setOpen(false);
+
         return gc;
     }
 
 
-    public PackageConfig getDefPackageConfig() {
+    private PackageConfig getDefPackageConfig() {
         // 包配置传入
         PackageConfig pc = new PackageConfig();
         return pc.setParent("com.freewill.file")
-                //.setModuleName(scanner("模块名"))
                 .setEntity("entity")
                 .setMapper("mapper")
                 .setXml("mappings")
@@ -62,7 +62,7 @@ public class GeneratorWrapper {
                 .setController("controller");
     }
 
-    public StrategyConfig getDefStrategyConf() {
+    private StrategyConfig getDefStrategyConf() {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // 下划线转驼峰命名 表名生成策略
@@ -72,8 +72,9 @@ public class GeneratorWrapper {
         // 需要生成的表 表名 new String[]
         strategy.setInclude();
         //lombok集成
-        strategy.setEntityLombokModel(true);
+        strategy.setEntityLombokModel(false);
         strategy.setControllerMappingHyphenStyle(true);
+        strategy.entityTableFieldAnnotationEnable(true);
         //是否生成controller控制器
         strategy.setRestControllerStyle(true);
         // 此处可以修改为您的表前缀
@@ -82,7 +83,7 @@ public class GeneratorWrapper {
         // 自定义实体父类
         strategy.setSuperEntityClass("");
         // 自定义实体,公共字段
-        strategy.setSuperEntityColumns("test_id", "age");
+        strategy.setSuperEntityColumns("", "");
         // 自定义 mapper 父类
         strategy.setSuperMapperClass("");
         // 自定义 service 父类

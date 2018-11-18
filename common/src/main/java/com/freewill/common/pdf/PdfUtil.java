@@ -1,5 +1,6 @@
 package com.freewill.common.pdf;
 
+import com.hg.xdoc.XDocService;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfReader;
@@ -8,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import com.hg.xdoc.XDocService;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -33,7 +34,6 @@ public class PdfUtil {
 
 	/**
 	 * PDF文件转PNG图片，全部页数
-	 * @param PdfFilePath pdf完整路径
 	 * @param dstImgFolder 图片存放的文件夹
 	 * @param dpi dpi越大转换后越清晰，相对转换速度越慢
 	 */
@@ -67,7 +67,6 @@ public class PdfUtil {
 
 	/**
 	 * PDF文件转PNG图片，全部页数
-	 * @param PdfFilePath pdf完整路径
 	 * @param dpi dpi越大转换后越清晰，相对转换速度越慢
 	 */
 	public static List<BufferedImage> pdf2Img(InputStream pdfFile,  int dpi){
