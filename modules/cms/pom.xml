@@ -22,11 +22,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <maven.test.skip>true</maven.test.skip>
-        <aliyun.oss.version>2.5.0</aliyun.oss.version>
+        <aliyun.oss.version>3.0.0</aliyun.oss.version>
     </properties>
 
     <dependencies>
-
         <!-- springboot启动包- exclude掉spring-boot的默认log配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,7 +53,18 @@
             <artifactId>freewill-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
+        <!--oss-->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun.oss.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jaxb-impl</artifactId>
+                    <groupId>com.sun.xml.bind</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!--热部署-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -62,12 +72,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--oss-->
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
-            <version>${aliyun.oss.version}</version>
-        </dependency>
 
     </dependencies>
 

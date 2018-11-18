@@ -89,7 +89,9 @@ spring:
 #        url: jdbc:mysql://XXXX:3306/XXXX?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
 #        username: root
 #        password: XXXX
-
+        url: jdbc:mysql://mysql57.rdsmwr12vp41f4o.rds.gz.baidubce.com:3306/db_freewill?useUnicode=true&characterEncoding=utf8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
+        username: gaojian
+        password: Gj1397539
 
 #mybatis
 mybatis-plus:

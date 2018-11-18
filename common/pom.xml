@@ -27,7 +27,7 @@
         <userAgentUtils.version>1.20</userAgentUtils.version>
         <zxing.version>3.3.2</zxing.version>
         <aliyun.mns.version>1.1.8</aliyun.mns.version>
-        <aliyun.core.version>4.2.0</aliyun.core.version>
+        <aliyun.core.version>3.4.0</aliyun.core.version>
         <aliyun.sms.version>1.1.0</aliyun.sms.version>
         <itextpdf.version>5.4.3</itextpdf.version>
         <itext.asian.version>5.2.0</itext.asian.version>
@@ -53,10 +53,9 @@
         <!--</dependency>-->
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons.io.version}</version>
-
         </dependency>
 
         <dependency>
@@ -157,6 +156,21 @@
             </exclusions>
         </dependency>
     </dependencies>
-
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <extdirs>${basedir}\lib</extdirs>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
