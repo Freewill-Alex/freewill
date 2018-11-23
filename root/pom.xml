@@ -16,8 +16,8 @@
         <module>../parent</module>
         <!--通用组件-->
         <module>../common</module>
-        <module>../modules/cms</module>
-        <!--<module>../web</module>-->
+        <module>../modules/admin</module>
+        <module>../security</module>
     </modules>
 
 

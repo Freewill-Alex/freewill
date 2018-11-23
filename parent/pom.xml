@@ -22,7 +22,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <maven.test.skip>true</maven.test.skip>
-        <shiro.version>1.4.0</shiro.version>
         <druid.version>1.1.10</druid.version>
         <mybatisplus.version>3.0.3</mybatisplus.version>
         <velocity.version>1.4.7.RELEASE</velocity.version>
@@ -38,14 +37,14 @@
         <!--</dependency>-->
         <!--Lombok-->
         <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring</artifactId>
-            <version>${shiro.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--热部署-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -113,10 +112,7 @@
         <!--<artifactId>spring-boot-starter-activemq</artifactId>-->
         <!--</dependency>-->
 
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-cache</artifactId>-->
-        <!--</dependency>-->
+
         <!--<dependency>-->
         <!--<groupId>org.apache.cxf</groupId>-->
         <!--<artifactId>cxf-spring-boot-starter-jaxrs</artifactId>-->

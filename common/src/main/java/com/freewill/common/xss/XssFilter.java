@@ -20,7 +20,7 @@ public class XssFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        XssHttpServletRequestWrapper xssRequest = new XssHttpServletRequestWrapper(
+        com.freewill.common.xss.XssHttpServletRequestWrapper xssRequest = new com.freewill.common.xss.XssHttpServletRequestWrapper(
                 (HttpServletRequest) request);
         chain.doFilter(xssRequest, response);
     }
