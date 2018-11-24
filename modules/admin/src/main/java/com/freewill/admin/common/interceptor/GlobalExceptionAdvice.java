@@ -3,8 +3,11 @@ package com.freewill.admin.common.interceptor;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.freewill.common.constant.CommonConstant;
 import com.freewill.common.exception.BussinessException;
+import com.freewill.common.exception.SystemException;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.ShiroException;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -19,11 +22,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
@@ -39,7 +44,7 @@ import static com.freewill.common.constant.CommonConstant.BUSINESS_ERR;
 @RestController
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionAdvice {
+public class GlobalExceptionAdvice implements HandlerExceptionResolver, Ordered {
     /**
      * 业务开发相关异常
      *
@@ -55,6 +60,20 @@ public class GlobalExceptionAdvice {
     }
 
     /**
+     * 登录相关异常
+     *
+     * @param req
+     * @param e
+     * @return GlobalResponseResult
+     */
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = {ShiroException.class,})
+    public R<Object> shiroException(HttpServletRequest req, Exception e) {
+        log.error("未登录：", e);
+        return exceptionWarpper(CommonConstant.NOLOGIN_CODE, "用户未登录 ：" + e.getMessage(), req);
+    }
+
+    /**
      * 500 -  服务器内部异常跳转页面
      *
      * @param e
@@ -62,7 +81,7 @@ public class GlobalExceptionAdvice {
      * @return ModelAndView
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({ServletException.class, IOException.class})
+    @ExceptionHandler({ServletException.class, IOException.class, SystemException.class})
     public ModelAndView serverException(Exception e, WebRequest request) {
         log.error("系统服务异常：", e);
         log.debug(request.getHeader("Content-Type"));
@@ -183,6 +202,17 @@ public class GlobalExceptionAdvice {
 
     private R<Object> exceptionWarpper(int code, String message, HttpServletRequest req) {
         return new GlobalResponseResult().setPath(req.getRequestURI()).setCode(code).setMsg(message).setData(BUSINESS_ERR);
+    }
+
+    @Override
+    public int getOrder() {
+        return  HIGHEST_PRECEDENCE;
+    }
+
+    @Override
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        log.error("捕捉异常：{}", ex);
+        return null;
     }
 }
 

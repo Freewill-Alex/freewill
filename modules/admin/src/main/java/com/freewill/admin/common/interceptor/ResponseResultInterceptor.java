@@ -9,7 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -22,9 +25,14 @@ import java.lang.reflect.Method;
 public class ResponseResultInterceptor implements HandlerInterceptor {
 
     public static final String RESPONSE_RESULT = "RESPONSE-RESULT";
-
+    private List<Integer> errorCodeList = Collections.singletonList(500);
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)   {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        log.debug("ResponseResultInterceptor.preHandle------------->>>");
+        if (errorCodeList.contains(response.getStatus())) {
+
+            return false;
+        }
         if (handler instanceof HandlerMethod) {
             final HandlerMethod handlerMethod = (HandlerMethod) handler;
             final Class<?> clazz = handlerMethod.getBeanType();

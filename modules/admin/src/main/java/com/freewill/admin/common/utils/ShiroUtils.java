@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.freewill.admin.common.security;
+package com.freewill.admin.common.utils;
 
 import com.freewill.admin.entity.SysUser;
 import com.freewill.common.exception.BussinessException;

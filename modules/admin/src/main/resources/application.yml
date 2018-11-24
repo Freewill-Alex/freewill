@@ -97,9 +97,6 @@ mybatis-plus:
    #实体扫描，多个package用逗号或者分号分隔
    type-aliases-package: com.freewill.admin.*.entity
    global-config:
-     #更改 XML 文件后，自动刷新，无需再次重启工程(生产不建议开启)
-    #刷新mapper 调试神器
-     refresh: true
      db-config:
         db-type: mysql
         #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";

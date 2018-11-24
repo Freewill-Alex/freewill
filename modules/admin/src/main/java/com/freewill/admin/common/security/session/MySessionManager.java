@@ -20,9 +20,6 @@ public class MySessionManager extends DefaultWebSessionManager {
 
     private static final String REFERENCED_SESSION_ID_SOURCE = "Stateless request";
 
-    /**
-     * 设置会话的全局过期时间（毫秒为单位），默认 30 分钟：
-     */
 
     public MySessionManager() {
         super();

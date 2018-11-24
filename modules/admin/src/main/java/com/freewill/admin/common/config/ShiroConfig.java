@@ -1,6 +1,9 @@
-package com.freewill.admin.common.security;
+package com.freewill.admin.common.config;
 
+import com.freewill.admin.common.security.MyShiroDbRealm;
+import com.freewill.admin.common.security.SpringCacheManagerWrapper;
 import com.freewill.admin.common.security.session.MySessionManager;
+import com.freewill.admin.common.security.session.OnlineSessionFactory;
 import com.freewill.admin.common.security.session.RedissonSessionDao;
 import com.freewill.admin.common.security.session.ShiroSessionListener;
 import com.freewill.common.redis.RedisUtils;
@@ -10,8 +13,10 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.redisson.spring.cache.CacheConfig;
@@ -28,14 +33,21 @@ import java.util.*;
 @Log4j2
 public class ShiroConfig {
 
+    /**
+     * 设置会话的全局过期时间（毫秒为单位），默认 30 分钟：
+     */
+    private static final int GLOBAL_SESSION_TIMEOUT = 1800000;
 
+    /**
+     * Shiro的过滤器链
+     */
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         log.debug("ShiroConfiguration.shiroFilter()");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         //注意过滤器配置顺序 不能颠倒
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了，登出后跳转配置的loginUrl
         filterChainDefinitionMap.put("/logout", "logout");
@@ -78,11 +90,43 @@ public class ShiroConfig {
         return myShiroDbRealm;
     }
 
+    /**
+     * cookie对象;
+     * rememberMeCookie()方法是设置Cookie的生成模版，比如cookie的name，cookie的有效时间等等。
+     *
+     * @return
+     */
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        //System.out.println("ShiroConfiguration.rememberMeCookie()");
+        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        //<!-- 记住我cookie生效时间//7天 ,单位秒;-->
+        simpleCookie.setMaxAge(7 * 24 * 60 * 60);
+        return simpleCookie;
+    }
+
+    /**
+     * cookie管理对象;
+     * rememberMeManager()方法是生成rememberMe管理器，而且要将这个rememberMe管理器设置到securityManager中
+     *
+     * @return
+     */
+    @Bean
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
+        cookieRememberMeManager.setCipherKey(org.apache.shiro.codec.Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
+        return cookieRememberMeManager;
+    }
 
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myShiroRealm());
+        //配置记住我 参考博客：
+        securityManager.setRememberMeManager(rememberMeManager());
         // 自定义session管理 使用redis
         securityManager.setSessionManager(sessionManager());
         // 自定义缓存实现 使用redis
@@ -108,7 +152,7 @@ public class ShiroConfig {
         simpleCookie.setHttpOnly(true);
         simpleCookie.setPath("/");
         //maxAge=-1表示浏览器关闭时失效此Cookie
-        simpleCookie.setMaxAge(-1);
+        simpleCookie.setMaxAge(1800);
         return simpleCookie;
     }
 
@@ -124,7 +168,7 @@ public class ShiroConfig {
         sessionManager.setSessionIdCookie(sessionIdCookie());
 
         //全局会话超时时间（单位毫秒），默认30分钟  暂时设置为10秒钟 用来测试
-        sessionManager.setGlobalSessionTimeout(10000);
+        sessionManager.setGlobalSessionTimeout(10000);//GLOBAL_SESSION_TIMEOUT
         //是否开启删除无效的session对象  默认为true
         sessionManager.setDeleteInvalidSessions(true);
         //是否开启定时调度器进行检测过期session 默认为true
@@ -132,7 +176,7 @@ public class ShiroConfig {
         //设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
         //设置该属性 就不需要设置 ExecutorServiceSessionValidationScheduler 底层也是默认自动调用ExecutorServiceSessionValidationScheduler
         //暂时设置为 5秒 用来测试
-        sessionManager.setSessionValidationInterval(5000);
+        sessionManager.setSessionValidationInterval(5000);//3600000
 
         //取消url 后面的 JSESSIONID
         sessionManager.setSessionIdUrlRewritingEnabled(false);
@@ -183,5 +227,25 @@ public class ShiroConfig {
     @Bean("sessionListener")
     public ShiroSessionListener sessionListener() {
         return new ShiroSessionListener();
+    }
+
+    /**
+     * 配置会话的工厂
+     *
+     * @return sessionFactory
+     */
+    @Bean("sessionFactory")
+    public OnlineSessionFactory sessionFactory() {
+        return new OnlineSessionFactory();
+    }
+
+    /**
+     * Shiro生命周期处理器:
+     * 用于在实现了Initializable接口的Shiro bean初始化时调用Initializable接口回调(例如:UserRealm)
+     * 在实现了Destroyable接口的Shiro bean销毁时调用 Destroyable接口回调(例如:DefaultSecurityManager)
+     */
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
     }
 }
