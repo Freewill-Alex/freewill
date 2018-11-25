@@ -25,7 +25,7 @@ import static com.freewill.admin.common.security.session.RedissonSessionScript.*
  *
  * @author streamone
  */
-public class RedissonSession implements Session {
+public class RedissonSession extends OnlineSession {
 
     private RedissonClient redisson;
     private Codec infoCodec = new JsonJacksonCodec();

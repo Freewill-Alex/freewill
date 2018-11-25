@@ -7,7 +7,6 @@ import com.freewill.common.exception.SystemException;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -22,13 +21,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
@@ -44,7 +41,7 @@ import static com.freewill.common.constant.CommonConstant.BUSINESS_ERR;
 @RestController
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionAdvice implements HandlerExceptionResolver, Ordered {
+public class GlobalExceptionAdvice {
     /**
      * 业务开发相关异常
      *
@@ -204,16 +201,7 @@ public class GlobalExceptionAdvice implements HandlerExceptionResolver, Ordered 
         return new GlobalResponseResult().setPath(req.getRequestURI()).setCode(code).setMsg(message).setData(BUSINESS_ERR);
     }
 
-    @Override
-    public int getOrder() {
-        return  HIGHEST_PRECEDENCE;
-    }
 
-    @Override
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        log.error("捕捉异常：{}", ex);
-        return null;
-    }
 }
 
 

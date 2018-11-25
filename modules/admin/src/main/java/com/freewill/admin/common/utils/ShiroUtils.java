@@ -33,18 +33,18 @@ import org.apache.shiro.subject.Subject;
 public class ShiroUtils {
 
 	/**  加密算法 */
-	private final static String HASH_ALGORITHM_NAME = "SHA-256";
+	public final static String HASH_ALGORITHM_NAME = "SHA-256";
 	/**  循环次数 */
-	private final static int HASH_ITERATIONS = 16;
+	public final static int HASH_ITERATIONS = 16;
 
 	/**
 	 * 加密
 	 * @param password 密码
-	 * @param salt 盐
+	 * @param credentialsSalt  盐(username+salt)
 	 * @return 密文
 	 */
-	public static String sha256(String password, String salt) {
-		return new SimpleHash(HASH_ALGORITHM_NAME, password, salt, HASH_ITERATIONS).toString();
+	public static String sha256(String password, String credentialsSalt) {
+		return new SimpleHash(HASH_ALGORITHM_NAME, password, credentialsSalt, HASH_ITERATIONS).toString();
 	}
 
 	public static Session getSession() {

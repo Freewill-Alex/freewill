@@ -25,11 +25,10 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
     static-path-pattern: /static
-
 #热部署关闭
   devtools:
       restart:
-        enabled: false
+        enabled: true
 
 #AOP config
   aop:
@@ -91,11 +90,12 @@ spring:
         password: Gj1397539
 
 
+
 #mybatis
 mybatis-plus:
    mapper-locations: classpath*:mapping/*Mapper.xml
    #实体扫描，多个package用逗号或者分号分隔
-   type-aliases-package: com.freewill.admin.*.entity
+   type-aliases-package: com.freewill.admin.entity
    global-config:
      db-config:
         db-type: mysql

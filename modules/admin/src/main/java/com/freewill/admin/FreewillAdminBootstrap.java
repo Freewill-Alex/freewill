@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -27,16 +29,19 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Slf4j
 @SpringBootApplication(exclude = {BeetlSqlConfig.class})
-// 启注解事务管理，等同于xml配置方式的 <tx:annotation-driven />
+//启注解事务管理，等同于xml配置方式的 <tx:annotation-driven />
 @EnableTransactionManagement
-public class FreewillAdminBootstrap {
+public class FreewillAdminBootstrap extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(FreewillAdminBootstrap.class);
-//        application.setBannerMode(OFF);
         application.setWebApplicationType(WebApplicationType.SERVLET);
         application.run(args);
         log.info("=====================SpringBoot Running Started===================");
     }
 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(FreewillAdminBootstrap.class);
+    }
 }

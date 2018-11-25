@@ -1,18 +1,25 @@
 package com.freewill.admin.common.security.session;
 
 import com.freewill.common.utils.IPUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SessionContext;
-import org.apache.shiro.session.mgt.SessionFactory;
+import org.apache.shiro.session.mgt.SimpleSessionFactory;
 import org.apache.shiro.web.session.mgt.WebSessionContext;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class OnlineSessionFactory implements SessionFactory {
+/**
+ * @author GaoJian
+ */
+@Slf4j
+public class OnlineSessionFactory extends SimpleSessionFactory {
     @Override
     public Session createSession(SessionContext initData) {
+        log.debug("OnlineSessionFactory.createSession:{}", initData);
         OnlineSession session = new OnlineSession();
-        if (initData != null && initData instanceof WebSessionContext) {
+
+        if (initData instanceof WebSessionContext) {
             WebSessionContext sessionContext = (WebSessionContext) initData;
             HttpServletRequest request = (HttpServletRequest) sessionContext.getServletRequest();
             if (request != null) {

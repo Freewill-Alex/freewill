@@ -1,6 +1,5 @@
 package com.freewill.admin.common.controller;
 
-import com.freewill.common.exception.BussinessException;
 import com.freewill.common.web.annotation.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -41,33 +40,24 @@ public class FreewillController {
      *
      * @return
      */
-    @RequestMapping("/index")
+    @RequestMapping("/unlogin")
     @ResponseBody
-    public List<Map> getName() {
-        log.info("hello,{}", "Gaojian");
+    public List<Map> unlogin() {
+        log.info("hello,{}", "unlogin");
         return getList();
     }
 
-    @RequestMapping("/index4")
+    @RequestMapping("/unauth")
     @ResponseBody
-    public int getName4() throws BussinessException {
-        log.info("hello,{}", "Gaojian");
-        int a = 1 / 0;
-
-        return a;
+    public int unauth() {
+        log.info("hello,{}", "unauth");
+        return 403;
     }
 
-    @RequestMapping("/index3")
-    @ResponseBody
-    public int getName3() {
-        log.info("hello,{}", "Gaojian");
-        return 1 / 0;
-    }
-
-    @RequestMapping("/index2")
-    public String name2(Model model, String name) {
+    @RequestMapping("/index")
+    public String index(Model model) {
         model.addAttribute("name", "Gaojian");
-        log.info("hello,{}", "Gaojian");
+        log.info("hello,{}", "index");
         return "/index.html";
     }
 }
