@@ -93,6 +93,8 @@ public class SysUser implements Serializable  {
      * 创建时间
      */
     @TableField("create_time")
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createTime;
 
 

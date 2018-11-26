@@ -13,8 +13,9 @@ spring:
   profiles:
       active: dev
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+
   servlet:
     multipart:
       max-file-size: 100MB
@@ -121,17 +122,17 @@ mybatis-plus:
       cache-enabled: false
       call-setters-on-nulls: true
 
-#监控跟踪
-management:
-  server:
-    port: 60001
-  endpoints:
-    enabled-by-default: true
-    web:
-      base-path: /actuator
-      exposure:
-           include: '*'
-  endpoint:
-    health:
-      show-details: always
+##监控跟踪
+#management:
+#  server:
+#    port: 60001
+#  endpoints:
+#    enabled-by-default: true
+#    web:
+#      base-path: /actuator
+#      exposure:
+#           include: '*'
+#  endpoint:
+#    health:
+#      show-details: always
 
