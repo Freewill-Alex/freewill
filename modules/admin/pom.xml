@@ -23,7 +23,7 @@
         <java.version>1.8</java.version>
         <maven.test.skip>true</maven.test.skip>
         <aliyun.oss.version>3.0.0</aliyun.oss.version>
-        <shiro.version>1.4.0</shiro.version>
+
     </properties>
 
     <dependencies>
@@ -49,12 +49,6 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
         <!-- end of log related -->
-
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring</artifactId>
-            <version>${shiro.version}</version>
-        </dependency>
 
         <!--freewill 公共第三方组件工具包-->
         <dependency>

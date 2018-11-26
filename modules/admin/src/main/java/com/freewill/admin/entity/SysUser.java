@@ -183,7 +183,8 @@ public class SysUser implements Serializable  {
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
-   public  String getCredentialsSalt(){
+
+   public  String credentialsSalt(){
         return  username+salt;
    }
     @Override

@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
+import java.util.List;
 
 import static com.freewill.common.constant.CommonConstant.BUSINESS_ERR;
 
@@ -53,7 +55,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(value = {BussinessException.class, RuntimeException.class})
     public R<Object> businessException(HttpServletRequest req, Exception e) {
         log.error("API服务异常：", e);
-        return exceptionWarpper(CommonConstant.FAILED_CODE, "Exception ：" + e.getMessage(), req);
+        return exceptionWarpper(CommonConstant.FAILED_CODE, "API服务异常 ：" + e.getMessage(), req);
     }
 
     /**
@@ -131,8 +133,8 @@ public class GlobalExceptionAdvice {
     public R<Object> handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
         FieldError error = result.getFieldError();
-        String field = error != null ? error.getField() : null;
-        String code = error != null ? error.getDefaultMessage() : null;
+        String field = error.getField();
+        String code = error.getDefaultMessage();
         String message = String.format("%s:%s", field, code);
         log.error("参数验证错误{}", message);
         return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数验证错误" + message, req);
@@ -145,12 +147,13 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(BindException.class)
     public R<Object> handleBindException(HttpServletRequest req, BindException e) {
         BindingResult result = e.getBindingResult();
-        FieldError error = result.getFieldError();
-        String field = error != null ? error.getField() : null;
-        String code = error != null ? error.getDefaultMessage() : null;
-        String message = String.format("[%s]:%s", field, code);
-        log.error("参数绑定异常{}", message);
-        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数绑定异常" + message, req);
+        List<ObjectError> errs = result.getAllErrors();
+        StringBuilder sb = new StringBuilder();
+        for (ObjectError err : errs) {
+            sb.append(err.getDefaultMessage()).append(";");
+        }
+        log.error("参数绑定异常:{}", sb.toString());
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数绑定异常:" +  sb.toString(), req);
     }
 
 

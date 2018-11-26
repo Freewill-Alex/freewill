@@ -26,6 +26,8 @@
         <mybatis.plus.version>3.0.6</mybatis.plus.version>
         <velocity.version>1.4.7.RELEASE</velocity.version>
         <beetl.version>1.1.15.RELEASE</beetl.version>
+        <shiro.version>1.4.0</shiro.version>
+        <redisson.version>3.8.2</redisson.version>
     </properties>
     <dependencies>
 
@@ -35,6 +37,13 @@
         <!--<artifactId>weixin-java-open</artifactId>-->
         <!--<version>3.1.0</version>-->
         <!--</dependency>-->
+
+        <!--Shiro-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
         <!--Lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -169,8 +178,9 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.8.2</version>
+            <version>${redisson.version}</version>
         </dependency>
+
         <!--<dependency>-->
         <!--<groupId>org.springframework.boot</groupId>-->
         <!--<artifactId>spring-boot-starter-advice</artifactId>-->

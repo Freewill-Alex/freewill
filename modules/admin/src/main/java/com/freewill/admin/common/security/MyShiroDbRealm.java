@@ -22,7 +22,6 @@ import static com.freewill.admin.common.utils.ShiroUtils.HASH_ALGORITHM_NAME;
 import static com.freewill.admin.common.utils.ShiroUtils.HASH_ITERATIONS;
 
 /**
- *
  * @author Administrator
  * @date 2017/12/11
  * 自定义权限匹配和账号密码匹配
@@ -33,14 +32,15 @@ public class MyShiroDbRealm extends AuthorizingRealm {
     private SysUserService sysUserService;
     @Resource
     private SysRoleService sysRoleService;
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.debug("权限配置-->MyShiroDbRealm.doGetAuthorizationInfo()");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         SysUser userInfo = (SysUser) principals.getPrimaryPrincipal();
-        List<Long> roleIds=userInfo.getRoleIdList();
-        Collection<SysRole> roleList =sysRoleService.listByIds(roleIds);
-        for (SysRole role :  roleList) {
+        List<Long> roleIds = userInfo.getRoleIdList();
+        Collection<SysRole> roleList = sysRoleService.listByIds(roleIds);
+        for (SysRole role : roleList) {
             authorizationInfo.addRole(role.getRoleName());
             //权限统计
 //            for (SysMenu p : role.getPermissions()) {
@@ -74,7 +74,7 @@ public class MyShiroDbRealm extends AuthorizingRealm {
                     //密码
                     userInfo.getPassword(),
                     //salt=username+salt
-                    ByteSource.Util.bytes(userInfo.getCredentialsSalt()),
+                    ByteSource.Util.bytes(userInfo.credentialsSalt()),
                     //realm name
                     getName()
             );
@@ -93,7 +93,7 @@ public class MyShiroDbRealm extends AuthorizingRealm {
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        //散列算法:这里使用MD5算法;
+        //散列算法:这里sha256算法;
         hashedCredentialsMatcher.setHashAlgorithmName(HASH_ALGORITHM_NAME);
         //散列的次数，比如散列两次;
         hashedCredentialsMatcher.setHashIterations(HASH_ITERATIONS);

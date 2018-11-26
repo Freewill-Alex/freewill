@@ -13,11 +13,15 @@ import javax.validation.constraints.NotEmpty;
  */
 @Data
 public class LoginForm {
-    @NotEmpty(groups = { SelectGroup.class}, message = "用户名username不能为空")
-    private String username;//帐号
-    @NotEmpty(groups = { SelectGroup.class}, message = "用户密码pwd不能为空")
-    private String password; //密码;
-
-    private Boolean remenberMe;//是否记住我
+    @NotEmpty(groups = {SelectGroup.class}, message = "账号[username]不能为空")
+    private String username;
+    @NotEmpty(groups = {SelectGroup.class}, message = "密码[password]不能为空")
+    private String password;
+//    @NotEmpty(groups = {SelectGroup.class}, message = "验证码[captcha]不能为空")
+    private String captcha;
+    /**
+     * 是否记住我
+     */
+    private Boolean remenberMe;
 
 }
