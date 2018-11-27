@@ -28,6 +28,7 @@ import static com.freewill.admin.common.security.session.RedissonSessionScript.*
 public class RedissonSession extends OnlineSession {
 
     private RedissonClient redisson;
+
     private Codec infoCodec = new JsonJacksonCodec();
     private Codec codec = infoCodec;
     private String infoKey;
@@ -35,8 +36,9 @@ public class RedissonSession extends OnlineSession {
 
     private Serializable id;
 
-    public RedissonSession(RedissonClient redisson, Codec codec, String infoKey, String attrKey,
-                           Serializable id) {
+    RedissonSession(RedissonClient redisson, Codec codec, String infoKey, String attrKey,
+                    Serializable id) {
+
         if (redisson == null || infoKey == null || attrKey == null || id == null) {
             throw new IllegalArgumentException("Arguments must not be null!");
         }
@@ -50,8 +52,8 @@ public class RedissonSession extends OnlineSession {
         this.id = id;
     }
 
-    public RedissonSession(RedissonClient redisson, Codec codec, String infoKey, String attrKey,
-                           Session session) {
+    RedissonSession(RedissonClient redisson, Codec codec, String infoKey, String attrKey,
+                    Session session) {
         if (redisson == null || infoKey == null || attrKey == null || session == null) {
             throw new IllegalArgumentException("Arguments must not be null!");
         }
@@ -70,7 +72,7 @@ public class RedissonSession extends OnlineSession {
         init(session);
     }
 
-    protected void init(final Session session) {
+    private void init(final Session session) {
         final long timeout = session.getTimeout() > 0 ? session.getTimeout() :
                 AbstractSessionManager.DEFAULT_GLOBAL_SESSION_TIMEOUT;
 
@@ -96,6 +98,10 @@ public class RedissonSession extends OnlineSession {
 
     @Override
     public Date getStartTimestamp() {
+        return getDate(GET_START_SCRIPT);
+    }
+
+    private Date getDate(String getStartScript) {
         List<Object> keys = new ArrayList<>(1);
         keys.add(this.infoKey);
 
@@ -103,7 +109,7 @@ public class RedissonSession extends OnlineSession {
         Date res = null;
         try {
             res = script.eval(this.infoKey, RScript.Mode.READ_ONLY,
-                    this.infoCodec, GET_START_SCRIPT,
+                    this.infoCodec, getStartScript,
                     RScript.ReturnType.MAPVALUE, keys);
         } catch (RedisException e) {
             convertException(e);
@@ -118,24 +124,7 @@ public class RedissonSession extends OnlineSession {
 
     @Override
     public Date getLastAccessTime() {
-        List<Object> keys = new ArrayList<>(1);
-        keys.add(this.infoKey);
-
-        RedissonScript script = (RedissonScript) this.redisson.getScript();
-        Date res = null;
-        try {
-            res = script.eval(this.infoKey, RScript.Mode.READ_ONLY,
-                    this.infoCodec, GET_LAST_SCRIPT,
-                    RScript.ReturnType.MAPVALUE, keys);
-        } catch (RedisException e) {
-            convertException(e);
-        }
-
-        if (res == null) {
-            throw new InvalidSessionException();
-        } else {
-            return res;
-        }
+        return getDate(GET_LAST_SCRIPT);
     }
 
     @Override

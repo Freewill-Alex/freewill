@@ -18,6 +18,8 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.redisson.client.codec.Codec;
+import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -27,16 +29,21 @@ import org.springframework.context.annotation.Configuration;
 import java.util.*;
 
 /**
- * Created by Administrator on 2017/12/11.
+ *
+ * @author Administrator
+ * @date 2017/12/11
  */
 @Log4j2
 @Configuration
 public class ShiroConfig {
-
     /**
      * 设置会话的全局过期时间（毫秒为单位），默认 30 分钟：
      */
     private static final int GLOBAL_SESSION_TIMEOUT = 1800000;
+    /**
+     * 设置会话过期验证间隔时间，默认 60 分钟：
+     */
+    private static final int SESSION_VALID_INTERVAL = 3600000;
 
     /**
      * Shiro的过滤器链
@@ -46,26 +53,27 @@ public class ShiroConfig {
         log.debug("ShiroConfiguration.shiroFilter()");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        //注意过滤器配置顺序 不能颠倒
-        //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了，登出后跳转配置的loginUrl
-        filterChainDefinitionMap.put("/logout", "logout");
-        // 配置不会被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/login", "anon");
-        filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/favicon.ico", "anon");
-        filterChainDefinitionMap.put("/**", "authc");
         //配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
         shiroFilterFactoryBean.setLoginUrl("/unlogin");
         // 登录成功后要跳转的链接
         shiroFilterFactoryBean.setSuccessUrl("/index");
         //未授权界面;
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauth");
+
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        //注意过滤器配置顺序 不能颠倒
+        //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了，登出后跳转配置的loginUrl
+//        filterChainDefinitionMap.put("/logout", "logout");
+        // 配置不会被拦截的链接 顺序判断
+        filterChainDefinitionMap.put("/login", "anon");
+        filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/favicon.ico", "anon");
+        filterChainDefinitionMap.put("/**", "authc");
+
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
-
 
 
     @Bean
@@ -77,15 +85,14 @@ public class ShiroConfig {
      * cookie对象;
      * rememberMeCookie()方法是设置Cookie的生成模版，比如cookie的name，cookie的有效时间等等。
      *
-     * @return
+     * @return SimpleCookie
      */
     @Bean
     public SimpleCookie rememberMeCookie() {
-        //System.out.println("ShiroConfiguration.rememberMeCookie()");
         //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
         SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        //<!-- 记住我cookie生效时间//7天 ,单位秒;-->
-        simpleCookie.setMaxAge(7 * 24 * 60 * 60);
+        //<!-- 记住我cookie生效时间//30天 ,单位秒;-->
+        simpleCookie.setMaxAge(30 * 24 * 60 * 60);
         return simpleCookie;
     }
 
@@ -93,7 +100,7 @@ public class ShiroConfig {
      * cookie管理对象;
      * rememberMeManager()方法是生成rememberMe管理器，而且要将这个rememberMe管理器设置到securityManager中
      *
-     * @return
+     * @return CookieRememberMeManager
      */
     @Bean
     public CookieRememberMeManager rememberMeManager() {
@@ -121,7 +128,7 @@ public class ShiroConfig {
      * 配置保存sessionId的cookie
      * 注意：这里的cookie 不是上面的记住我 cookie 记住我需要一个cookie session管理 也需要自己的cookie
      *
-     * @return
+     * @return SimpleCookie
      */
     @Bean("sessionIdCookie")
     public SimpleCookie sessionIdCookie() {
@@ -134,12 +141,11 @@ public class ShiroConfig {
         //防止xss读取cookie
         simpleCookie.setHttpOnly(true);
         simpleCookie.setPath("/");
-        //maxAge=-1表示浏览器关闭时失效此Cookie
-        simpleCookie.setMaxAge(1800);
+        //maxAge=-1表示浏览器关闭时失效此Cookie，7天 单位秒;
+        simpleCookie.setMaxAge(7 * 24 * 60 * 60);
         return simpleCookie;
     }
 
-    //自定义sessionManager
     @Bean
     public SessionManager sessionManager() {
         MySessionManager sessionManager = new MySessionManager();
@@ -152,17 +158,15 @@ public class ShiroConfig {
         sessionManager.setSessionIdCookie(sessionIdCookie());
 
         //全局会话超时时间（单位毫秒），默认30分钟  暂时设置为10秒钟 用来测试
-        sessionManager.setGlobalSessionTimeout(10000);//GLOBAL_SESSION_TIMEOUT
+        sessionManager.setGlobalSessionTimeout(GLOBAL_SESSION_TIMEOUT);
         //是否开启删除无效的session对象  默认为true
         sessionManager.setDeleteInvalidSessions(true);
         //是否开启定时调度器进行检测过期session 默认为true
-//        ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
-//        sessionManager.setSessionValidationScheduler(scheduler);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         //设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
         //设置该属性 就不需要设置 ExecutorServiceSessionValidationScheduler 底层也是默认自动调用ExecutorServiceSessionValidationScheduler
         //暂时设置为 5秒 用来测试
-        sessionManager.setSessionValidationInterval(5000);//3600000
+        sessionManager.setSessionValidationInterval(SESSION_VALID_INTERVAL);
 
         //取消url 后面的 JSESSIONID
         sessionManager.setSessionIdUrlRewritingEnabled(false);
@@ -178,6 +182,10 @@ public class ShiroConfig {
     @Bean
     public RedissonSessionDao redissonSessionDao() {
         RedissonSessionDao redissonSessionDao = new RedissonSessionDao();
+        //使用自定义的序列化编码器
+        LocalDateTimeSerializerConfig  serializerConfig=new  LocalDateTimeSerializerConfig();
+        Codec customCodec = new JsonJacksonCodec(serializerConfig.objectMapper());
+        redissonSessionDao.setCodec(customCodec);
         redissonSessionDao.setRedisson(RedisUtils.getRedisson());
         return redissonSessionDao;
     }
@@ -185,6 +193,7 @@ public class ShiroConfig {
     @Bean
     public CacheManager cacheManager() {
         Map<String, CacheConfig> config = new HashMap<>(16);
+
         config.put("shiro-cache", new CacheConfig(30 * 60 * 1000, 15 * 60 * 1000));
         SpringCacheManagerWrapper scw = new SpringCacheManagerWrapper();
         scw.setCacheManager(new RedissonSpringCacheManager(RedisUtils.getRedisson(), config));
@@ -196,7 +205,7 @@ public class ShiroConfig {
      * 使用代理方式;所以需要开启代码支持;
      *
      * @param securityManager
-     * @return
+     * @return AuthorizationAttributeSourceAdvisor
      */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {

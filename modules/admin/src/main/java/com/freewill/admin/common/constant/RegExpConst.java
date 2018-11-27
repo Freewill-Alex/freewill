@@ -1,4 +1,4 @@
-package com.freewill.common.constant;
+package com.freewill.admin.common.constant;
 
 /**
  * @Description 正则规则表达式集合

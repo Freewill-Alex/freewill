@@ -5,7 +5,7 @@ package com.freewill.admin.common.security.session;
  *
  * @author streamone
  */
- abstract class RedissonSessionScript {
+public   class RedissonSessionScript {
     private static final String INFO_ID_KEY = "id";
     private static final String INFO_START_KEY = "startTimestamp";
     private static final String INFO_STOP_KEY = "stopTimestamp";

@@ -44,12 +44,10 @@ public class RedissonSessionDao extends AbstractSessionDAO {
         String attrKey = getSessionAttrKey(sessionId.toString());
         List<Object> keys = new ArrayList<>(1);
         keys.add(infoKey);
-
         RedissonScript script = (RedissonScript) this.redisson.getScript();
         Long remainTimeToLive = script.eval(infoKey, RScript.Mode.READ_ONLY, this.codec,
                 RedissonSessionScript.READ_SCRIPT,
                 RScript.ReturnType.INTEGER, keys);
-
         if (remainTimeToLive > 0) {
             return new RedissonSession(this.redisson, this.codec, infoKey, attrKey, sessionId);
         } else {
@@ -97,10 +95,8 @@ public class RedissonSessionDao extends AbstractSessionDAO {
      * @param sessionId the session id
      * @return key name
      */
-    protected String getSessionInfoKey(String sessionId) {
-        StringBuilder name = new StringBuilder(SESSION_INFO_KEY_PREFIX);
-        name.append("{").append(sessionId).append("}");
-        return name.toString();
+    private String getSessionInfoKey(String sessionId) {
+        return SESSION_INFO_KEY_PREFIX + "{" + sessionId + "}";
     }
 
     /**
@@ -114,10 +110,8 @@ public class RedissonSessionDao extends AbstractSessionDAO {
      * @param sessionId the session id
      * @return key name
      */
-    protected String getSessionAttrKey(String sessionId) {
-        StringBuilder name = new StringBuilder(SESSION_ATTR_KEY_PREFIX);
-        name.append("{").append(sessionId).append("}");
-        return name.toString();
+    private String getSessionAttrKey(String sessionId) {
+        return SESSION_ATTR_KEY_PREFIX + "{" + sessionId + "}";
     }
 
     public RedissonClient getRedisson() {

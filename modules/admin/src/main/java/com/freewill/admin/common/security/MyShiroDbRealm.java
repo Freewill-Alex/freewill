@@ -50,13 +50,15 @@ public class MyShiroDbRealm extends AuthorizingRealm {
         return authorizationInfo;
     }
 
-    /*主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。*/
+    /**
+     * 主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
             throws AuthenticationException {
         //获取用户的输入的账号.
         String username = (String) token.getPrincipal();
-        log.debug("Token---credentials:{}", token.getCredentials());
+        log.debug("TokenCredentials:{}", token.getCredentials());
         //通过username从数据库中查找 User对象，如果找到，没找到.
         //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
         SysUser userInfo = sysUserService.getByUsername(username);
@@ -67,7 +69,7 @@ public class MyShiroDbRealm extends AuthorizingRealm {
                 throw new LockedAccountException("账号已被锁定,请联系管理员");
             }
 
-            log.debug("userInfo----->>:{}", userInfo);
+            log.debug("ShiroUserInfo----->>:{}", userInfo);
             return new SimpleAuthenticationInfo(
                     //用户
                     userInfo,
@@ -86,10 +88,7 @@ public class MyShiroDbRealm extends AuthorizingRealm {
     /**
      * 凭证匹配器
      * （由于我们的密码校验交给Shiro的SimpleAuthenticationInfo进行处理了）
-     *
-     * @return
      */
-
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();

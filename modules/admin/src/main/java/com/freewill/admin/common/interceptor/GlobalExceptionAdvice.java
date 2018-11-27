@@ -7,6 +7,7 @@ import com.freewill.common.exception.SystemException;
 import com.freewill.common.web.wrapper.GlobalResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -68,9 +69,25 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = {ShiroException.class,})
     public R<Object> shiroException(HttpServletRequest req, Exception e) {
-        log.error("未登录：", e);
+        log.error("未登录：",  e.getMessage());
         return exceptionWarpper(CommonConstant.NOLOGIN_CODE, "用户未登录 ：" + e.getMessage(), req);
     }
+
+    /**
+     * 登录相关异常
+     *
+     * @param req
+     * @param e
+     * @return GlobalResponseResult
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = {UnauthorizedException.class,})
+    public R<Object> unAuthException(HttpServletRequest req, Exception e) {
+        log.warn("无权限：", e.getMessage());
+        return exceptionWarpper(CommonConstant.NOAUTH_CODE, "无权限 " , req);
+    }
+
+
 
     /**
      * 500 -  服务器内部异常跳转页面

@@ -14,11 +14,9 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.freewill.common.constant.FormatConst;
+import com.freewill.admin.common.constant.FormatConst;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,13 +31,13 @@ import static com.fasterxml.jackson.annotation.PropertyAccessor.ALL;
 import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
 
 /**
+ *
+ * 用于解决序列化和反序列化LocalDateTime
  * @author GaoJian
  */
-@Configuration
 public class LocalDateTimeSerializerConfig {
 
     @Bean
-    @Primary
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         Map<Class<?>, JsonSerializer<?>> serialMap = new HashMap<>(16);
         Map<Class<?>, JsonDeserializer<?>> deserialMap = new HashMap<>(16);
@@ -53,11 +51,9 @@ public class LocalDateTimeSerializerConfig {
         deserialMap.put(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(FormatConst.DEFAULT_TIME_FORMAT)));
 
 
-        return builder -> builder.serializersByType(serialMap).deserializersByType(deserialMap);
+        return builder -> builder.serializersByType(serialMap).deserializersByType(deserialMap).configure(objectMapper());
     }
-
     @Bean
-    @Primary
     public ObjectMapper objectMapper() {
         ObjectMapper om = new ObjectMapper();
         JavaTimeModule javaTimeModule = new JavaTimeModule();

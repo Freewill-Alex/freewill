@@ -1,4 +1,4 @@
-package com.freewill.common.constant;
+package com.freewill.admin.common.constant;
 
 /**
  * @author GaoJian
