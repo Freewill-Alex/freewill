@@ -25,6 +25,7 @@ public class ResponseResultInterceptor implements HandlerInterceptor {
 
     static final String RESPONSE_RESULT = "RESPONSE-RESULT";
     private List<Integer> errorCodeList = Collections.singletonList(500);
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (errorCodeList.contains(response.getStatus())) {
@@ -46,11 +47,11 @@ public class ResponseResultInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)   {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)   {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         // nothing to do
     }
 

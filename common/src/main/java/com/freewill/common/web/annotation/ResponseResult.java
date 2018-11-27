@@ -1,7 +1,7 @@
 package com.freewill.common.web.annotation;
 
 import com.baomidou.mybatisplus.extension.api.R;
-import com.freewill.common.web.wrapper.GlobalResponseResult;
+import com.freewill.common.web.wrapper.Result;
 
 import java.lang.annotation.*;
 
@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface ResponseResult {
 
-    Class<? extends R> value() default GlobalResponseResult.class;
+    Class<? extends R> value() default Result.class;
 
 }

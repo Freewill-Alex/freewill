@@ -70,6 +70,7 @@ public class PosterUtil {
         }
         return tag;
     }
+
     public static BufferedImage buildDriverPoster(String templetUrl, String qrContent) {
 
         BufferedImage tag = null;

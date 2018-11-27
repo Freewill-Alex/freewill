@@ -22,7 +22,7 @@ import java.util.List;
  * @author GaoJian
  * @since 2018-11-18
  */
-public class SysUser implements Serializable  {
+public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -184,9 +184,10 @@ public class SysUser implements Serializable  {
         this.createTime = createTime;
     }
 
-   public  String credentialsSalt(){
-        return  username+salt;
-   }
+    public String credentialsSalt() {
+        return username + salt;
+    }
+
     @Override
     public String toString() {
         return "SysUser{" +

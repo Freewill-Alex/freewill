@@ -17,7 +17,7 @@ public class LoginForm {
     private String username;
     @NotEmpty(groups = {SelectGroup.class}, message = "密码[password]不能为空")
     private String password;
-//    @NotEmpty(groups = {SelectGroup.class}, message = "验证码[captcha]不能为空")
+    //    @NotEmpty(groups = {SelectGroup.class}, message = "验证码[captcha]不能为空")
     private String captcha;
     /**
      * 是否记住我

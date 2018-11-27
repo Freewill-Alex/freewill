@@ -1,5 +1,4 @@
-
-package com.freewill.admin.common.dto;
+package com.freewill.common.sms;
 
 import java.io.Serializable;
 
@@ -8,7 +7,7 @@ import java.io.Serializable;
  *
  * @author dengfuyuan
  */
-public class CheckCode implements Serializable {
+public class SmsVerifyCode implements Serializable {
 
 
     /**
@@ -40,7 +39,7 @@ public class CheckCode implements Serializable {
     private int tryTimes;
 
 
-    public CheckCode() {
+    public SmsVerifyCode() {
     }
 
     /**
@@ -50,7 +49,7 @@ public class CheckCode implements Serializable {
      * @param code     校验码
      * @param sendTime 发送时间
      */
-    public CheckCode(String phone, String code, long sendTime) {
+    public SmsVerifyCode(String phone, String code, long sendTime) {
         this.phone = phone;
         this.code = code;
         this.sendTime = sendTime;

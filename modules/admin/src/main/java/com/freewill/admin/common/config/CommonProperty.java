@@ -1,9 +1,6 @@
 package com.freewill.admin.common.config;
 
 import com.freewill.common.config.CommonConfig;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.yaml.snakeyaml.Yaml;
@@ -20,9 +17,6 @@ import java.util.Map;
 
 @Configuration
 @Slf4j
-@Getter
-@Setter
-@ToString
 public class CommonProperty {
 
     private static Map properties = new HashMap<>();
@@ -66,9 +60,6 @@ public class CommonProperty {
 
     /**
      * 通过 [xxx.xxx.x.x] 获取配置文件的配置项
-     *
-     * @param key
-     * @return
      */
     private static String getProperty(String key) {
         if (properties != null) {

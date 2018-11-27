@@ -1,8 +1,8 @@
 package com.freewill.admin.common.controller;
 
-import com.freewill.admin.common.dto.CheckCode;
 import com.freewill.admin.common.service.SmsService;
 import com.freewill.common.exception.BussinessException;
+import com.freewill.common.sms.SmsVerifyCode;
 import com.freewill.common.utils.StringUtils;
 import com.freewill.common.web.annotation.IPLimit;
 import org.redisson.api.RMap;
@@ -61,14 +61,14 @@ public class SmsController {
         if (StringUtils.isEmpty(smsCode) || StringUtils.isEmpty(smsToken)) {
             throw new BussinessException("请先获取验证码");
         } else {
-            RMap<String, CheckCode> codeMap = smsService.getCodeMap();
+            RMap<String, SmsVerifyCode> codeMap = smsService.getCodeMap();
             if (codeMap.isExists()) {
-                CheckCode checkcode = codeMap.get(smsToken);
+                SmsVerifyCode checkcode = codeMap.get(smsToken);
                 if (checkcode == null) {
                     throw new BussinessException("请获取验证码");
                 } else if (!checkcode.isValid()) {
                     codeMap.remove(smsToken);
-                     throw new BussinessException("验证码已失效,请重新获取");
+                    throw new BussinessException("验证码已失效,请重新获取");
                 } else if (!smsCode.equals(checkcode.getCode())) {
                     checkcode.tryVerify();
                     codeMap.put(smsToken, checkcode);

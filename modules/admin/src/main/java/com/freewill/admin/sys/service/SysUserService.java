@@ -14,5 +14,5 @@ import com.freewill.admin.entity.SysUser;
 public interface SysUserService extends IService<SysUser> {
 
 
-      SysUser getByUsername(String name);
+    SysUser getByUsername(String name);
 }

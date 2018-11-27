@@ -43,7 +43,7 @@ public class Query<T> extends LinkedHashMap<String, Object> {
     /**
      * 每页条数
      */
-    private int limit = 10;
+    private int limit = 20;
 
     public Query(Map<String, Object> params) {
         this.putAll(params);

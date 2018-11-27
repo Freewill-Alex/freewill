@@ -60,25 +60,11 @@ public class RequestUtils {
 
     }
 
-    public void print(HttpServletRequest request, boolean isFull) {
-        String url = getRequestURL(request);
-        String method = getMethod(request);
-        String params = getParametersToStr(request);
-        String ip = getIpAddr(request);
-        log.info("Url:" + url);
-        log.info("Params:" + params);
-
-        if (isFull) {
-            log.info("Method:" + method);
-            log.info("Ip:" + ip);
-        }
-    }
-
     /**
      * 获取所有请求参数
      *
      * @param request
-     * @return Map<String   ,       Object>
+     * @return Map<String               ,                               Object>
      */
     public static Map<String, Object> getParameters(HttpServletRequest request) {
 
@@ -177,5 +163,19 @@ public class RequestUtils {
         }
 
         return sb.toString();
+    }
+
+    public void print(HttpServletRequest request, boolean isFull) {
+        String url = getRequestURL(request);
+        String method = getMethod(request);
+        String params = getParametersToStr(request);
+        String ip = getIpAddr(request);
+        log.info("Url:" + url);
+        log.info("Params:" + params);
+
+        if (isFull) {
+            log.info("Method:" + method);
+            log.info("Ip:" + ip);
+        }
     }
 }

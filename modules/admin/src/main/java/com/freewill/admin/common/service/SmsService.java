@@ -1,11 +1,11 @@
 package com.freewill.admin.common.service;
 
 import com.aliyun.mns.model.BatchSmsAttributes.SmsReceiverParams;
-import com.freewill.admin.common.dto.CheckCode;
 import com.freewill.common.config.CommonConfig;
 import com.freewill.common.exception.BussinessException;
 import com.freewill.common.redis.RedisUtils;
 import com.freewill.common.sms.SmsUtil;
+import com.freewill.common.sms.SmsVerifyCode;
 import com.freewill.common.utils.StringUtils;
 import org.redisson.api.RMap;
 import org.springframework.stereotype.Component;
@@ -52,16 +52,15 @@ public class SmsService {
     /**
      * 获取redis存储的短信验证码RMap信息
      *
-     * @return RMap（String, CheckCode）
+     * @return RMap（String, SmsVerifyCode）
      */
-    public RMap<String, CheckCode> getCodeMap() {
-        RMap<String, CheckCode> codeMap = RedisUtils.getRedisson().getMap(SMS_KEY);
+    public RMap<String, SmsVerifyCode> getCodeMap() {
+        RMap<String, SmsVerifyCode> codeMap = RedisUtils.getRedisson().getMap(SMS_KEY);
         if (!codeMap.isExists()) {
             throw new BussinessException("请获取验证码");
         }
         return codeMap;
     }
-
 
 
     /**
@@ -80,13 +79,13 @@ public class SmsService {
         }
         // 验证手机号格式是否正确
         // 判断60秒内已经发送过
-        RMap<String, CheckCode> codeMap = getCodeMap();
+        RMap<String, SmsVerifyCode> codeMap = getCodeMap();
         if (!StringUtils.isEmpty(oldToken)) {
-                CheckCode checkcode = codeMap.get(oldToken);
+            SmsVerifyCode checkcode = codeMap.get(oldToken);
             //校验验证码存在并是否超过有效期
             if (checkcode != null && checkcode.isValid()) {
-                    throw new BussinessException("请稍后再获取验证码");
-                }
+                throw new BussinessException("请稍后再获取验证码");
+            }
         }
         //短信验证码发送
         SmsReceiverParams params = new SmsReceiverParams();
@@ -95,7 +94,7 @@ public class SmsService {
         //生成新的smsToken
         String newToken = UUID.randomUUID().toString();
         //存入redis
-        codeMap.put(newToken, new CheckCode(phone, code, System.currentTimeMillis()));
+        codeMap.put(newToken, new SmsVerifyCode(phone, code, System.currentTimeMillis()));
 
         Map<String, String> data = new HashMap<>(16);
         data.put("smsToken", newToken);

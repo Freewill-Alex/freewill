@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.freewill.common.constant.CommonConstant;
 import com.freewill.common.utils.RequestContextHolderUtil;
 import com.freewill.common.web.annotation.ResponseResult;
-import com.freewill.common.web.wrapper.GlobalResponseResult;
+import com.freewill.common.web.wrapper.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -34,7 +34,7 @@ ResponseResultAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         // 此处的body即为返回前的返回结果，可对此进行处理，如加密，替换等等，如数据列权限的控制，可在此处用反射进行替换等
-        if (body instanceof GlobalResponseResult) {
+        if (body instanceof Result) {
             return body;
         }
 
@@ -46,8 +46,8 @@ ResponseResultAdvice implements ResponseBodyAdvice<Object> {
         log.debug("返回值:{}", body.toString());
 
         Class<? extends R> resultClazz = responseResultAnn.value();
-        if (resultClazz.isAssignableFrom(GlobalResponseResult.class)) {
-            R result = new GlobalResponseResult().setPath(RequestContextHolderUtil.getRequest().getRequestURI()).setCode(CommonConstant.SUCCESS_CODE).setData(body);
+        if (resultClazz.isAssignableFrom(Result.class)) {
+            R result = new Result().setPath(RequestContextHolderUtil.getRequest().getRequestURI()).setCode(CommonConstant.SUCCESS_CODE).setData(body);
             if (body instanceof String) {
                 return result.toString();
             }

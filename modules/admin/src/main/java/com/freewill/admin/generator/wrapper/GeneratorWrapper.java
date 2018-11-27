@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class GeneratorWrapper {
+    private static final String PROJECT_PATH = System.getProperty("user.dir");
     private GlobalConfig gc;
     private PackageConfig pc;
     private StrategyConfig strategy;
     private InjectionConfig cfg;
     private TemplateConfig tc;
-    private static final String PROJECT_PATH = System.getProperty("user.dir");
 
     private GlobalConfig getDefClobalConf() {
         // 全局配置
@@ -97,7 +97,7 @@ public class GeneratorWrapper {
 
     public void startGenerate(DataSourceConfig dsc) throws BussinessException {
         if (null == dsc) {
-            throw  new BussinessException("数据源配置未生效");
+            throw new BussinessException("数据源配置未生效");
         }
         gc = (null == gc) ? getDefClobalConf() : gc;
         pc = (null == pc) ? getDefPackageConfig() : pc;

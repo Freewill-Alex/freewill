@@ -31,8 +31,8 @@ import static com.fasterxml.jackson.annotation.PropertyAccessor.ALL;
 import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
 
 /**
- *
  * 用于解决序列化和反序列化LocalDateTime
+ *
  * @author GaoJian
  */
 public class LocalDateTimeSerializerConfig {
@@ -53,6 +53,7 @@ public class LocalDateTimeSerializerConfig {
 
         return builder -> builder.serializersByType(serialMap).deserializersByType(deserialMap).configure(objectMapper());
     }
+
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper om = new ObjectMapper();

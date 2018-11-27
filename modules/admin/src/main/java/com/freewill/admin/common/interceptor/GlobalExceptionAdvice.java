@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.freewill.common.constant.CommonConstant;
 import com.freewill.common.exception.BussinessException;
 import com.freewill.common.exception.SystemException;
-import com.freewill.common.web.wrapper.GlobalResponseResult;
+import com.freewill.common.web.wrapper.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -50,7 +50,7 @@ public class GlobalExceptionAdvice {
      *
      * @param req
      * @param e
-     * @return GlobalResponseResult
+     * @return Result
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {BussinessException.class, RuntimeException.class})
@@ -64,12 +64,12 @@ public class GlobalExceptionAdvice {
      *
      * @param req
      * @param e
-     * @return GlobalResponseResult
+     * @return Result
      */
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = {ShiroException.class,})
     public R<Object> shiroException(HttpServletRequest req, Exception e) {
-        log.error("未登录：",  e.getMessage());
+        log.error("未登录：", e.getMessage());
         return exceptionWarpper(CommonConstant.NOLOGIN_CODE, "用户未登录 ：" + e.getMessage(), req);
     }
 
@@ -78,15 +78,14 @@ public class GlobalExceptionAdvice {
      *
      * @param req
      * @param e
-     * @return GlobalResponseResult
+     * @return Result
      */
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = {UnauthorizedException.class,})
     public R<Object> unAuthException(HttpServletRequest req, Exception e) {
         log.warn("无权限：", e.getMessage());
-        return exceptionWarpper(CommonConstant.NOAUTH_CODE, "无权限 " , req);
+        return exceptionWarpper(CommonConstant.NOAUTH_CODE, "无权限 ", req);
     }
-
 
 
     /**
@@ -170,7 +169,7 @@ public class GlobalExceptionAdvice {
             sb.append(err.getDefaultMessage()).append(";");
         }
         log.error("参数绑定异常:{}", sb.toString());
-        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数绑定异常:" +  sb.toString(), req);
+        return exceptionWarpper(CommonConstant.FORM_VALID_ERROR_CODE, "参数绑定异常:" + sb.toString(), req);
     }
 
 
@@ -218,7 +217,7 @@ public class GlobalExceptionAdvice {
     }
 
     private R<Object> exceptionWarpper(int code, String message, HttpServletRequest req) {
-        return new GlobalResponseResult().setPath(req.getRequestURI()).setCode(code).setMsg(message).setData(BUSINESS_ERR);
+        return new Result().setPath(req.getRequestURI()).setCode(code).setMsg(message).setData(BUSINESS_ERR);
     }
 
 

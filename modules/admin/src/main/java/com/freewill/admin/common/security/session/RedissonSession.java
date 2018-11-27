@@ -1,5 +1,6 @@
 package com.freewill.admin.common.security.session;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.ExpiredSessionException;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
@@ -25,6 +26,7 @@ import static com.freewill.admin.common.security.session.RedissonSessionScript.*
  *
  * @author streamone
  */
+@Slf4j
 public class RedissonSession extends OnlineSession {
 
     private RedissonClient redisson;

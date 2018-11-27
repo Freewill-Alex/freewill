@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date: 2018/5/15
  * @description: 配置session监听器
  */
-public class ShiroSessionListener implements SessionListener{
+public class ShiroSessionListener implements SessionListener {
 
     /**
      * 统计在线人数
@@ -20,6 +20,7 @@ public class ShiroSessionListener implements SessionListener{
 
     /**
      * 会话创建时触发
+     *
      * @param session
      */
     @Override
@@ -30,6 +31,7 @@ public class ShiroSessionListener implements SessionListener{
 
     /**
      * 退出会话时触发
+     *
      * @param session
      */
     @Override
@@ -40,6 +42,7 @@ public class ShiroSessionListener implements SessionListener{
 
     /**
      * 会话过期时触发
+     *
      * @param session
      */
     @Override
@@ -47,8 +50,10 @@ public class ShiroSessionListener implements SessionListener{
         //会话过期,在线人数减一
         sessionCount.decrementAndGet();
     }
+
     /**
      * 获取在线人数使用
+     *
      * @return
      */
     public AtomicInteger getSessionCount() {

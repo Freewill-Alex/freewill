@@ -5,20 +5,110 @@ package com.freewill.admin.common.security.session;
  *
  * @author streamone
  */
-public   class RedissonSessionScript {
+public class RedissonSessionScript {
+    static final String RETURN_CODE_EXPIRED = "-1";
+    static final String RETURN_CODE_STOPPED = "-2";
+    static final String RETURN_CODE_INVALID = "-3";
+    static final String DELETE_SCRIPT =
+            "redis.call('UNLINK', KEYS[1], KEYS[2])";
+    static final String READ_SCRIPT =
+            "return redis.call('PTTL', KEYS[1])";
     private static final String INFO_ID_KEY = "id";
     private static final String INFO_START_KEY = "startTimestamp";
     private static final String INFO_STOP_KEY = "stopTimestamp";
+    static final String GET_START_SCRIPT =
+            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "local startTime = redis.call('HGET', KEYS[1], '\"" + INFO_START_KEY + "\"')\n" +
+                    "if startTime == nil then\n" +
+                    "  return " + makeError(RETURN_CODE_INVALID) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "return startTime";
+    static final String STOP_SCRIPT =
+            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "redis.call('HSET', KEYS[1], '\"" + INFO_STOP_KEY + "\"', ARGV[1])";
+    static final String GET_ATTRKEYS_SCRIPT =
+            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "return redis.call('HKEYS', KEYS[2])";
+    static final String GET_ATTR_SCRIPT =
+            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "return redis.call('HGET', KEYS[2], ARGV[1])";
+    static final String REMOVE_ATTR_SCRIPT =
+            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "local attr = redis.call('HGET', KEYS[2], ARGV[1])\n" +
+                    "if attr ~= nil then\n" +
+                    "  redis.call('HDEL', KEYS[2], ARGV[1])\n" +
+                    "end\n" +
+                    "\n" +
+                    "return attr";
+    static final String SET_ATTR_SCRIPT =
+            "local pttl = redis.call('PTTL', KEYS[1])\n" +
+                    "if pttl <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "redis.call('HSET', KEYS[2], ARGV[1], ARGV[2])\n" +
+                    "-- redis auto delete key of hash when it is empty.\n" +
+                    "-- then, expire time of the hash will be lost.\n" +
+                    "if redis.call('PTTL', KEYS[2]) <= 0 then\n" +
+                    "  redis.call('PEXPIRE', KEYS[2], pttl)\n" +
+                    "end";
     private static final String INFO_LAST_KEY = "lastAccessTime";
+    static final String GET_LAST_SCRIPT =
+            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
+                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
+                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "local lastTime = redis.call('HGET', KEYS[1], '\"" + INFO_LAST_KEY + "\"')\n" +
+                    "if lastTime == nil then\n" +
+                    "  return " + makeError(RETURN_CODE_INVALID) + "\n" +
+                    "end\n" +
+                    "\n" +
+                    "return lastTime";
     private static final String INFO_TIMEOUT_KEY = "timeout";
-    private static final String INFO_HOST_KEY = "host";
-
-    static final String RETURN_CODE_EXPIRED = "-1";
-
-    static final String RETURN_CODE_STOPPED = "-2";
-
-    static final String RETURN_CODE_INVALID = "-3";
-
     static final String TOUCH_SCRIPT =
             "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
                     "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
@@ -38,47 +128,7 @@ public   class RedissonSessionScript {
                     "redis.call('HSET', KEYS[1], '\"" + INFO_LAST_KEY + "\"', ARGV[1])\n" +
                     "redis.call('PEXPIRE', KEYS[1], timeout)\n" +
                     "redis.call('PEXPIRE', KEYS[2], timeout)";
-
-     static final String INIT_SCRIPT =
-            "redis.call('HMSET', KEYS[1], '\"" + INFO_ID_KEY + "\"', ARGV[1], '\"" + INFO_TIMEOUT_KEY + "\"', ARGV[2],\n" +
-                    "  '\"" + INFO_START_KEY + "\"', ARGV[3], '\"" + INFO_LAST_KEY + "\"', ARGV[3],\n" +
-                    "  '\"" + INFO_HOST_KEY + "\"', ARGV[4])\n" +
-                    "local timeout = cjson.decode(ARGV[2])[2]\n" +
-                    "redis.call('PEXPIRE', KEYS[1], timeout)";
-
-     static final String GET_START_SCRIPT =
-            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "local startTime = redis.call('HGET', KEYS[1], '\"" + INFO_START_KEY + "\"')\n" +
-                    "if startTime == nil then\n" +
-                    "  return " + makeError(RETURN_CODE_INVALID) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "return startTime";
-
-     static final String GET_LAST_SCRIPT =
-            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "local lastTime = redis.call('HGET', KEYS[1], '\"" + INFO_LAST_KEY + "\"')\n" +
-                    "if lastTime == nil then\n" +
-                    "  return " + makeError(RETURN_CODE_INVALID) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "return lastTime";
-
-     static final String GET_TIMEOUT_SCRIPT =
+    static final String GET_TIMEOUT_SCRIPT =
             "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
                     "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
                     "end\n" +
@@ -93,24 +143,7 @@ public   class RedissonSessionScript {
                     "end\n" +
                     "\n" +
                     "return timeout";
-
-     static final String GET_HOST_SCRIPT =
-            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "local host = redis.call('HGET', KEYS[1], '\"" + INFO_HOST_KEY + "\"')\n" +
-                    "if host == nil then\n" +
-                    "  return " + makeError(RETURN_CODE_INVALID) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "return host";
-
-     static final String SET_TIMEOUT_SCRIPT =
+    static final String SET_TIMEOUT_SCRIPT =
             "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
                     "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
                     "end\n" +
@@ -128,8 +161,14 @@ public   class RedissonSessionScript {
                     "local newTimeout = cjson.decode(ARGV[1])[2]\n" +
                     "redis.call('PEXPIRE', KEYS[1], newTimeout)\n" +
                     "redis.call('PEXPIRE', KEYS[2], newTimeout)";
-
-     static final String STOP_SCRIPT =
+    private static final String INFO_HOST_KEY = "host";
+    static final String INIT_SCRIPT =
+            "redis.call('HMSET', KEYS[1], '\"" + INFO_ID_KEY + "\"', ARGV[1], '\"" + INFO_TIMEOUT_KEY + "\"', ARGV[2],\n" +
+                    "  '\"" + INFO_START_KEY + "\"', ARGV[3], '\"" + INFO_LAST_KEY + "\"', ARGV[3],\n" +
+                    "  '\"" + INFO_HOST_KEY + "\"', ARGV[4])\n" +
+                    "local timeout = cjson.decode(ARGV[2])[2]\n" +
+                    "redis.call('PEXPIRE', KEYS[1], timeout)";
+    static final String GET_HOST_SCRIPT =
             "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
                     "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
                     "end\n" +
@@ -138,68 +177,12 @@ public   class RedissonSessionScript {
                     "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
                     "end\n" +
                     "\n" +
-                    "redis.call('HSET', KEYS[1], '\"" + INFO_STOP_KEY + "\"', ARGV[1])";
-
-     static final String GET_ATTRKEYS_SCRIPT =
-            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
+                    "local host = redis.call('HGET', KEYS[1], '\"" + INFO_HOST_KEY + "\"')\n" +
+                    "if host == nil then\n" +
+                    "  return " + makeError(RETURN_CODE_INVALID) + "\n" +
                     "end\n" +
                     "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "return redis.call('HKEYS', KEYS[2])";
-
-     static final String GET_ATTR_SCRIPT =
-            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "return redis.call('HGET', KEYS[2], ARGV[1])";
-
-     static final String REMOVE_ATTR_SCRIPT =
-            "if redis.call('PTTL', KEYS[1]) <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "local attr = redis.call('HGET', KEYS[2], ARGV[1])\n" +
-                    "if attr ~= nil then\n" +
-                    "  redis.call('HDEL', KEYS[2], ARGV[1])\n" +
-                    "end\n" +
-                    "\n" +
-                    "return attr";
-
-     static final String SET_ATTR_SCRIPT =
-            "local pttl = redis.call('PTTL', KEYS[1])\n" +
-                    "if pttl <= 0 then\n" +
-                    "  return " + makeError(RETURN_CODE_EXPIRED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "if redis.call('HEXISTS', KEYS[1], '\"" + INFO_STOP_KEY + "\"') == 1 then\n" +
-                    "  return " + makeError(RETURN_CODE_STOPPED) + "\n" +
-                    "end\n" +
-                    "\n" +
-                    "redis.call('HSET', KEYS[2], ARGV[1], ARGV[2])\n" +
-                    "-- redis auto delete key of hash when it is empty.\n" +
-                    "-- then, expire time of the hash will be lost.\n" +
-                    "if redis.call('PTTL', KEYS[2]) <= 0 then\n" +
-                    "  redis.call('PEXPIRE', KEYS[2], pttl)\n" +
-                    "end";
-
-     static final String DELETE_SCRIPT =
-            "redis.call('UNLINK', KEYS[1], KEYS[2])";
-
-     static final String READ_SCRIPT =
-            "return redis.call('PTTL', KEYS[1])";
+                    "return host";
 
     private static String makeError(String errMsg) {
         return "redis.error_reply(\"" + errMsg + "\")";

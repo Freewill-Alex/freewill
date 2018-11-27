@@ -1,4 +1,3 @@
-
 package com.freewill.common.utils;
 
 import java.beans.BeanInfo;

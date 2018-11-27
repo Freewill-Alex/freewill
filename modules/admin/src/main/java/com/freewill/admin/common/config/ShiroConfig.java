@@ -29,7 +29,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.*;
 
 /**
- *
  * @author Administrator
  * @date 2017/12/11
  */
@@ -183,7 +182,7 @@ public class ShiroConfig {
     public RedissonSessionDao redissonSessionDao() {
         RedissonSessionDao redissonSessionDao = new RedissonSessionDao();
         //使用自定义的序列化编码器
-        LocalDateTimeSerializerConfig  serializerConfig=new  LocalDateTimeSerializerConfig();
+        LocalDateTimeSerializerConfig serializerConfig = new LocalDateTimeSerializerConfig();
         Codec customCodec = new JsonJacksonCodec(serializerConfig.objectMapper());
         redissonSessionDao.setCodec(customCodec);
         redissonSessionDao.setRedisson(RedisUtils.getRedisson());
