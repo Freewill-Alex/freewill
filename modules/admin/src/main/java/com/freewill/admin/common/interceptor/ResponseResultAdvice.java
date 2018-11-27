@@ -40,7 +40,7 @@ ResponseResultAdvice implements ResponseBodyAdvice<Object> {
 
         ResponseResult responseResultAnn = (ResponseResult) RequestContextHolderUtil.getRequest().getAttribute(ResponseResultInterceptor.RESPONSE_RESULT);
         log.debug("ResponseResult[MediaType:{}," +
-                "Class:{}," +
+                "HttpMessageConverter:{}," +
                 "MethodParameter:{}]", selectedContentType, selectedConverterType, returnType);
 
         log.debug("返回值:{}", body.toString());
