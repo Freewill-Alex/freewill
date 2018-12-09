@@ -24,7 +24,7 @@ public class CommonProperty {
     static {
         Yaml yaml = new Yaml();
         try {
-            InputStream in = CommonProperty.class.getResourceAsStream("/freewill.yml");
+            InputStream in = CommonProperty.class.getResourceAsStream("/application.yml");
             if (in != null) {
                 //也可以将值转换为Map
                 properties = yaml.load(in);
@@ -35,9 +35,9 @@ public class CommonProperty {
         }
 
         //初始化公共组件的配置
-        CommonConfig.setRedisServer(getProperty("redis.server"));
+        CommonConfig.setRedisServer(getProperty("redis.host"));
         CommonConfig.setRedisPort(getProperty("redis.port"));
-        CommonConfig.setRedisPwd(getProperty("redis.pwd"));
+        CommonConfig.setRedisPwd(getProperty("redis.password"));
     }
 
 //

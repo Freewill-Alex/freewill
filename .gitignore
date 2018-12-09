@@ -33,3 +33,5 @@ hs_err_pid*
 /freewill_dev_1.0.iml
 /mvnw.cmd
 /mvnw
+/modules/admin/src/main/resources/config/application-dev.properties
+/modules/admin/src/main/resources/config/application-test.properties
